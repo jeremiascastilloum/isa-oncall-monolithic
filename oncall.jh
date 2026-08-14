@@ -1,0 +1,307 @@
+// =====================================================================
+//  OnCall - Sistema de guardias e incidentes
+//  Ingenieria de Software Aplicada  ·  Universidad de Mendoza
+//
+//  Pegar este archivo en https://start.jhipster.tech/jdl-studio/
+//  para ver el diagrama entidad-relacion, o generar directamente con:
+//      jhipster jdl oncall.jh
+// =====================================================================
+
+application {
+  config {
+    baseName oncall
+    applicationType monolith
+    packageName ar.edu.um.isa.oncall
+
+    authenticationType jwt
+
+    databaseType sql
+    devDatabaseType postgresql
+    prodDatabaseType postgresql
+    cacheProvider ehcache
+    enableHibernateCache true
+
+    clientFramework angular
+    clientTheme flatly
+    buildTool maven
+
+    enableTranslation true
+    nativeLanguage es
+    languages [es, en]
+
+    testFrameworks [cypress]
+  }
+  entities *
+}
+
+// ---------------------------------------------------------------------
+// 1 · CATALOGO DE SERVICIOS  ·  que operamos y quien es responsable
+// ---------------------------------------------------------------------
+
+/**
+ * Equipo responsable de uno o mas servicios en produccion.
+ */
+entity Equipo {
+  nombre String required unique maxlength(50)
+  emailContacto String required maxlength(120)
+  canalChat String maxlength(60)
+}
+
+/**
+ * Un servicio desplegado. Es la unidad sobre la que se abren incidentes.
+ */
+entity Servicio {
+  nombre String required unique maxlength(60)
+  descripcion String maxlength(500)
+  criticidad Criticidad required
+  entorno Entorno required
+  repositorioUrl String maxlength(255)
+  activo Boolean required
+}
+
+/**
+ * Objetivo de nivel de servicio (SLO) que despues usamos para saber
+ * si respondimos a tiempo.
+ */
+entity ObjetivoDeServicio {
+  tipo TipoObjetivo required
+  severidadAplicable Severidad required
+  minutosObjetivo Integer required min(1) max(10080)
+  descripcion String maxlength(255)
+}
+
+enum Criticidad {
+  TIER1, TIER2, TIER3
+}
+
+enum Entorno {
+  PRODUCCION, STAGING, DESARROLLO
+}
+
+enum TipoObjetivo {
+  TIEMPO_DE_RECONOCIMIENTO, TIEMPO_DE_RESOLUCION, DISPONIBILIDAD
+}
+
+// ---------------------------------------------------------------------
+// 2 · DETECCION  ·  del ruido de monitoreo al incidente
+// ---------------------------------------------------------------------
+
+/**
+ * Senal cruda que llega desde una herramienta de monitoreo.
+ * El fingerprint es la clave de deduplicacion: varias alertas con el
+ * mismo fingerprint deberian colapsar en un unico incidente.
+ */
+entity Alerta {
+  fingerprint String required maxlength(120)
+  origen OrigenAlerta required
+  resumen String required maxlength(200)
+  payload TextBlob
+  recibidaEn Instant required
+  procesada Boolean required
+}
+
+/**
+ * Incidente: la interrupcion real que estamos gestionando.
+ * Las marcas de tiempo son la materia prima del MTTA y el MTTR.
+ */
+entity Incidente {
+  titulo String required maxlength(140)
+  descripcion TextBlob
+  severidad Severidad required
+  estado EstadoIncidente required
+  detectadoEn Instant required
+  reconocidoEn Instant
+  mitigadoEn Instant
+  resueltoEn Instant
+  usuariosAfectados Integer min(0)
+  cumplioObjetivo Boolean
+}
+
+/**
+ * Linea de tiempo del incidente. Cada cosa que pasa deja una entrada.
+ */
+entity EventoDeIncidente {
+  tipo TipoEvento required
+  detalle String required maxlength(500)
+  ocurridoEn Instant required
+  automatico Boolean required
+}
+
+enum OrigenAlerta {
+  PROMETHEUS, DATADOG, CLOUDWATCH, HEALTHCHECK, MANUAL
+}
+
+enum Severidad {
+  SEV1, SEV2, SEV3, SEV4
+}
+
+enum EstadoIncidente {
+  ABIERTO, RECONOCIDO, MITIGADO, RESUELTO, CERRADO
+}
+
+enum TipoEvento {
+  CREACION, ASIGNACION, ESCALAMIENTO, NOTA, CAMBIO_DE_ESTADO, RESOLUCION
+}
+
+// ---------------------------------------------------------------------
+// 3 · GUARDIAS  ·  quien atiende, y cuando
+// ---------------------------------------------------------------------
+
+/**
+ * Rotacion de guardia de un equipo. Define el patron; los turnos
+ * concretos viven en TurnoDeGuardia.
+ */
+entity Rotacion {
+  nombre String required maxlength(60)
+  tipo TipoRotacion required
+  zonaHoraria String required maxlength(50)
+  activa Boolean required
+}
+
+/**
+ * Ventana concreta de tiempo en la que una persona esta de guardia.
+ */
+entity TurnoDeGuardia {
+  desde Instant required
+  hasta Instant required
+  esReemplazo Boolean
+  nota String maxlength(255)
+}
+
+/**
+ * Politica de escalamiento de un servicio: a quien se avisa,
+ * en que orden y cuanto se espera antes de subir un escalon.
+ */
+entity PoliticaEscalamiento {
+  nombre String required maxlength(60)
+  descripcion String maxlength(255)
+  repetirVeces Integer required min(0) max(5)
+}
+
+/**
+ * Un escalon de la politica.
+ */
+entity PasoEscalamiento {
+  orden Integer required min(1) max(10)
+  esperaMinutos Integer required min(0) max(120)
+  canal Canal required
+}
+
+enum TipoRotacion {
+  DIARIA, SEMANAL, PERSONALIZADA
+}
+
+enum Canal {
+  EMAIL, SMS, PUSH, WEBHOOK, LLAMADA
+}
+
+// ---------------------------------------------------------------------
+// 4 · RESPUESTA Y APRENDIZAJE
+// ---------------------------------------------------------------------
+
+/**
+ * Intento de avisarle a una persona por un canal.
+ */
+entity Notificacion {
+  canal Canal required
+  destino String required maxlength(120)
+  estado EstadoNotificacion required
+  enviadaEn Instant
+  intentos Integer required min(0) max(10)
+  errorMensaje String maxlength(255)
+}
+
+/**
+ * Analisis posterior al incidente. Sin culpables, con causas.
+ */
+entity Postmortem {
+  titulo String required maxlength(140)
+  resumen String required maxlength(500)
+  causaRaiz TextBlob required
+  lineaDeTiempo TextBlob
+  leccionesAprendidas TextBlob
+  publicado Boolean required
+  publicadoEn Instant
+}
+
+/**
+ * Compromiso concreto que sale del postmortem.
+ */
+entity AccionCorrectiva {
+  descripcion String required maxlength(300)
+  prioridad Prioridad required
+  estado EstadoAccion required
+  fechaLimite LocalDate
+  ticketUrl String maxlength(255)
+}
+
+enum EstadoNotificacion {
+  PENDIENTE, ENVIADA, ENTREGADA, FALLIDA, RECONOCIDA
+}
+
+enum Prioridad {
+  ALTA, MEDIA, BAJA
+}
+
+enum EstadoAccion {
+  PENDIENTE, EN_CURSO, COMPLETADA, DESCARTADA
+}
+
+// ---------------------------------------------------------------------
+// RELACIONES
+// ---------------------------------------------------------------------
+
+relationship ManyToOne {
+  Servicio{equipo(nombre) required} to Equipo{servicio}
+  ObjetivoDeServicio{servicio(nombre) required} to Servicio{objetivo}
+
+  Alerta{servicio(nombre) required} to Servicio{alerta}
+  Alerta{incidente(titulo)} to Incidente{alerta}
+  EventoDeIncidente{incidente(titulo) required} to Incidente{evento}
+
+  Rotacion{equipo(nombre) required} to Equipo{rotacion}
+  TurnoDeGuardia{rotacion(nombre) required} to Rotacion{turno}
+  PoliticaEscalamiento{servicio(nombre) required} to Servicio{politica}
+  PasoEscalamiento{politica(nombre) required} to PoliticaEscalamiento{paso}
+  PasoEscalamiento{rotacion(nombre)} to Rotacion{paso}
+
+  Notificacion{incidente(titulo) required} to Incidente{notificacion}
+  AccionCorrectiva{postmortem(titulo) required} to Postmortem{accion}
+}
+
+/**
+ * Un mismo incidente puede degradar varios servicios a la vez.
+ */
+relationship ManyToMany {
+  Incidente{servicio(nombre)} to Servicio{incidente}
+}
+
+/**
+ * Un incidente tiene a lo sumo un postmortem.
+ */
+relationship OneToOne {
+  Postmortem{incidente(titulo) required} to Incidente{postmortem}
+}
+
+/**
+ * Las personas son el User que ya trae JHipster: no lo reinventamos.
+ */
+relationship ManyToOne {
+  Incidente{comandante(login)} to User with builtInEntity
+  TurnoDeGuardia{responsable(login) required} to User with builtInEntity
+  PasoEscalamiento{destinatarioDirecto(login)} to User with builtInEntity
+  Notificacion{destinatario(login) required} to User with builtInEntity
+  AccionCorrectiva{responsable(login)} to User with builtInEntity
+}
+
+// ---------------------------------------------------------------------
+// OPCIONES TRANSVERSALES
+// ---------------------------------------------------------------------
+
+dto * with mapstruct
+service all with serviceClass
+
+paginate Incidente, Alerta, Postmortem with pagination
+paginate EventoDeIncidente, Notificacion, TurnoDeGuardia with infinite-scroll
+
+filter Incidente, Alerta, Servicio, Notificacion

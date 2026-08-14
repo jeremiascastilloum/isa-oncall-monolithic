@@ -1,0 +1,43 @@
+# Build
+target/
+build/
+out/
+*.class
+*.jar
+*.war
+
+# Node
+node_modules/
+npm-debug.log*
+.npm/
+.pnpm-store/
+
+# JHipster / Angular
+.jhipster/
+.angular/
+dist/
+coverage/
+.mvn/wrapper/maven-wrapper.jar
+
+# Tests
+.nyc_output/
+cypress/screenshots/
+cypress/videos/
+test-results/
+
+# IDE
+.idea/
+*.iml
+.vscode/
+.settings/
+.project
+.classpath
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Local
+*.log
+.env
+.env.local

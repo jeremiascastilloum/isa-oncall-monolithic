@@ -1,0 +1,14 @@
+# El Dev Container usa files.eol = "\n". Normalizamos para que Windows y Linux
+# vean el mismo contenido y los scripts del generador no se rompan.
+* text=auto eol=lf
+
+*.png binary
+*.jpg binary
+*.gif binary
+*.ico binary
+*.jar binary
+
+mvnw text eol=lf
+*.sh text eol=lf
+*.cmd text eol=crlf
+mvnw.cmd text eol=crlf

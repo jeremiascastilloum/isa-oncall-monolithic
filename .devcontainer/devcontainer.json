@@ -1,0 +1,52 @@
+{
+  "name": "ISA · OnCall (JHipster 9)",
+  "image": "mcr.microsoft.com/devcontainers/java:1-21-bookworm",
+
+  "features": {
+    "ghcr.io/devcontainers/features/node:1": {
+      "version": "22"
+    },
+    "ghcr.io/devcontainers/features/docker-in-docker:2": {
+      "version": "latest",
+      "moby": true
+    }
+  },
+
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "vscjava.vscode-java-pack",
+        "vmware.vscode-boot-dev-pack",
+        "Angular.ng-template",
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        "ms-azuretools.vscode-docker",
+        "redhat.vscode-yaml",
+        "eamodio.gitlens"
+      ],
+      "settings": {
+        "editor.formatOnSave": true,
+        "java.configuration.updateBuildConfiguration": "automatic",
+        "files.eol": "\n",
+        "terminal.integrated.defaultProfile.linux": "bash"
+      }
+    }
+  },
+
+  "forwardPorts": [8080, 9000, 5432],
+  "portsAttributes": {
+    "8080": { "label": "Spring Boot (API)", "onAutoForward": "notify" },
+    "9000": { "label": "Angular dev server", "onAutoForward": "openBrowser" },
+    "5432": { "label": "PostgreSQL", "onAutoForward": "silent" }
+  },
+
+  "postCreateCommand": "npm install -g generator-jhipster@9.2.0 && jhipster --version",
+
+  "remoteUser": "vscode",
+
+  "hostRequirements": {
+    "cpus": 2,
+    "memory": "8gb",
+    "storage": "32gb"
+  }
+}
