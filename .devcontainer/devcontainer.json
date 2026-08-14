@@ -1,6 +1,11 @@
 {
   "name": "ISA · OnCall (JHipster 9)",
-  "image": "mcr.microsoft.com/devcontainers/java:1-21-bookworm",
+  "build": {
+    "dockerfile": "Dockerfile",
+    "args": {
+      "VARIANT": "1-21-bookworm"
+    }
+  },
 
   "features": {
     "ghcr.io/devcontainers/features/node:1": {
