@@ -29,6 +29,26 @@ Traer instalado y funcionando **antes** de la clase:
 
 ## Clase 1 · Levantar el entorno
 
+El camino depende de tu sistema operativo. **En Windows no alcanza con clonar y abrir la carpeta** — leé la sección que te corresponde.
+
+### Windows · cloná dentro de un volumen Docker
+
+`Ctrl+Shift+P` → **Dev Containers: Clone Repository in Container Volume**, y pegá:
+
+```
+https://github.com/jeremiascastilloum/isa-oncall-monolithic.git
+```
+
+VS Code clona el repo adentro de un volumen de Docker y abre el contenedor apuntando ahí. No hace falta `git clone` previo ni `code .`.
+
+**Por qué.** Si clonás a una carpeta de Windows (`C:\Users\...`) y hacés *Reopen in Container*, Docker Desktop expone esa carpeta sobre un filesystem llamado **9p**, que no soporta permisos de Linux: todos los archivos se ven como `root` y el usuario del contenedor no puede cambiarles el modo. Escribir archivos nuevos funciona, así que el entorno *parece* andar bien — hasta que en la Clase 2 el generador intenta sobrescribir un archivo existente, llama a `chmod` y muere con `EPERM: operation not permitted`.
+
+De paso, el volumen es bastante más rápido: Maven, npm y Angular hacen mucha lectura y escritura de archivos chicos, y sobre 9p eso se arrastra.
+
+**El costo:** el código vive adentro del volumen, no en tu disco de Windows. No lo vas a ver en el Explorador. Trabajás desde VS Code y corrés `git` desde la terminal del contenedor, que es lo que vas a hacer igual.
+
+### Linux / macOS
+
 ```bash
 git clone https://github.com/jeremiascastilloum/isa-oncall-monolithic.git
 cd isa-oncall-monolithic
@@ -39,7 +59,9 @@ Cuando VS Code muestre el aviso *"Folder contains a Dev Container configuration 
 
 Si no aparece: `Ctrl+Shift+P` → **Dev Containers: Reopen in Container**.
 
-Al terminar, verificá adentro del contenedor:
+### Verificación
+
+Al terminar, adentro del contenedor:
 
 ```bash
 java -version      # 21
@@ -114,7 +136,9 @@ Esas cuatro reglas son el material de las clases siguientes.
 ```
 isa-oncall-monolithic/
 ├── .devcontainer/
-│   └── devcontainer.json    # Java 21 + Node 22 + Docker + JHipster 9.2
+│   ├── devcontainer.json         # Java 21 + Node 22 + Docker + JHipster 9.2
+│   ├── Dockerfile                # imagen base + parche del repo apt de Yarn
+│   └── devcontainer-lock.json    # versiones fijas de los features
 ├── docs/
 │   └── modelo.md            # el modelo explicado en prosa
 ├── oncall.jh                # el modelo JDL
@@ -142,5 +166,15 @@ isa-oncall-monolithic/
 **El Dev Container no arranca / se queda colgado.** Revisá que Docker Desktop esté corriendo y que tenga al menos 8 GB de memoria asignada (Settings → Resources).
 
 **`jhipster jdl` falla con un error de parseo.** Confirmá la versión con `jhipster --version`. El JDL está escrito para 9.2.0.
+
+**`jhipster jdl` genera cientos de archivos y después muere con `EPERM: operation not permitted, chmod`.** Estás en Windows con el repo clonado en una carpeta de Windows. Es lo que explica la [Clase 1](#windows--cloná-dentro-de-un-volumen-docker): volvé a clonar con **Clone Repository in Container Volume** y generá de nuevo desde ahí.
+
+Si querés limpiar la generación a medias antes de rehacerla:
+
+```bash
+git checkout -- . && git clean -fd
+```
+
+Borra todo lo que el generador dejó. `oncall.jh` está versionado, así que no se pierde.
 
 **No querés depender de PostgreSQL.** Cambiá `devDatabaseType postgresql` por `devDatabaseType h2Disk` en el `oncall.jh` antes de generar. La aplicación levanta sin Docker, pero perdés el ejercicio de contenedores.
