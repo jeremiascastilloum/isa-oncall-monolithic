@@ -94,13 +94,33 @@ Tomate el tiempo de mirar la consola. Cuando termine, contá los archivos:
 git status --porcelain | wc -l
 ```
 
-### 3. Levantar la base de datos
+### 3. Parchear el tema
+
+Agregá al final de `src/main/webapp/content/scss/_bootstrap-variables.scss` — un archivo que recién existe después de generar:
+
+```scss
+$web-font-path: false;
+```
+
+Sin esa línea el build del frontend falla y `./mvnw` no llega a arrancar:
+
+```
+✘ [ERROR] Could not resolve "../../../../../node_modules/bootswatch/dist/flatly||file:https://fonts.googleapis.com/css2?family=Lato..."
+```
+
+**Por qué.** El tema `flatly` que pide el JDL trae la fuente Lato desde Google Fonts con un `@import url()`. Esa URL es absoluta: le corresponde resolverla al navegador, no al bundler. Pero el builder de Angular 21 la trata como ruta de archivo y la reescribe relativa al `.scss` que la importa — de ahí el `||` en el mensaje, que es el separador que usa internamente. Después no encuentra el archivo y aborta.
+
+Bootswatch envuelve ese import en un `@if $web-font-path`, así que anulando la variable desaparece. La app queda con las fuentes del sistema y sin depender de un CDN externo, que para algo pensado para operarse on-premise es más sano.
+
+> Si volvés a generar con `--force`, este archivo se pisa y hay que repetir el paso.
+
+### 4. Levantar la base de datos
 
 ```bash
 docker compose -f src/main/docker/postgresql.yml up -d
 ```
 
-### 4. Levantar la aplicación
+### 5. Levantar la aplicación
 
 Dos terminales:
 
@@ -176,5 +196,9 @@ git checkout -- . && git clean -fd
 ```
 
 Borra todo lo que el generador dejó. `oncall.jh` está versionado, así que no se pierde.
+
+**`./mvnw` falla con `Could not resolve ".../bootswatch/dist/flatly||file:https://fonts.googleapis.com/..."`.** Te salteaste el [paso 3 de la Clase 2](#3-parchear-el-tema), o regeneraste con `--force` y se pisó el archivo. Volvé a agregar `$web-font-path: false;` al final de `src/main/webapp/content/scss/_bootstrap-variables.scss`.
+
+**El build tira decenas de `Sass @import rules are deprecated`.** Son warnings de Dart Sass, no rompen nada. Vienen de los templates de JHipster y se van a ir cuando el generador migre a `@use`.
 
 **No querés depender de PostgreSQL.** Cambiá `devDatabaseType postgresql` por `devDatabaseType h2Disk` en el `oncall.jh` antes de generar. La aplicación levanta sin Docker, pero perdés el ejercicio de contenedores.
