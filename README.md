@@ -16,12 +16,12 @@ Eso es lo que vamos a construir. No es casual: **es el mismo problema del que tr
 
 Traer instalado y funcionando **antes** de la clase:
 
-| Herramienta | Verificación |
-|---|---|
-| [Docker Desktop](https://www.docker.com/products/docker-desktop) | `docker --version` |
-| [Git](https://git-scm.com/downloads) | `git --version` |
-| [Visual Studio Code](https://code.visualstudio.com/download) | — |
-| Extensión **Dev Containers** (`ms-vscode-remote.remote-containers`) | — |
+| Herramienta                                                         | Verificación       |
+| ------------------------------------------------------------------- | ------------------ |
+| [Docker Desktop](https://www.docker.com/products/docker-desktop)    | `docker --version` |
+| [Git](https://git-scm.com/downloads)                                | `git --version`    |
+| [Visual Studio Code](https://code.visualstudio.com/download)        | —                  |
+| Extensión **Dev Containers** (`ms-vscode-remote.remote-containers`) | —                  |
 
 > ⚠️ La primera vez que abras el Dev Container se descargan varios GB. **Hacelo en casa, no en la facultad.**
 
@@ -29,39 +29,17 @@ Traer instalado y funcionando **antes** de la clase:
 
 ## Clase 1 · Levantar el entorno
 
-El camino depende de tu sistema operativo. **En Windows no alcanza con clonar y abrir la carpeta** — leé la sección que te corresponde.
-
-### Windows · cloná dentro de un volumen Docker
-
-`Ctrl+Shift+P` → **Dev Containers: Clone Repository in Container Volume**, y pegá:
-
-```
-https://github.com/jeremiascastilloum/isa-oncall-monolithic.git
-```
-
-VS Code clona el repo adentro de un volumen de Docker y abre el contenedor apuntando ahí. No hace falta `git clone` previo ni `code .`.
-
-**Por qué.** Si clonás a una carpeta de Windows (`C:\Users\...`) y hacés *Reopen in Container*, Docker Desktop expone esa carpeta sobre un filesystem llamado **9p**, que no soporta permisos de Linux: todos los archivos se ven como `root` y el usuario del contenedor no puede cambiarles el modo. Escribir archivos nuevos funciona, así que el entorno *parece* andar bien — hasta que en la Clase 2 el generador intenta sobrescribir un archivo existente, llama a `chmod` y muere con `EPERM: operation not permitted`.
-
-De paso, el volumen es bastante más rápido: Maven, npm y Angular hacen mucha lectura y escritura de archivos chicos, y sobre 9p eso se arrastra.
-
-**El costo:** el código vive adentro del volumen, no en tu disco de Windows. No lo vas a ver en el Explorador. Trabajás desde VS Code y corrés `git` desde la terminal del contenedor, que es lo que vas a hacer igual.
-
-### Linux / macOS
-
 ```bash
 git clone https://github.com/jeremiascastilloum/isa-oncall-monolithic.git
 cd isa-oncall-monolithic
 code .
 ```
 
-Cuando VS Code muestre el aviso *"Folder contains a Dev Container configuration file"* → **Reopen in Container**.
+Cuando VS Code muestre el aviso _"Folder contains a Dev Container configuration file"_ → **Reopen in Container**.
 
 Si no aparece: `Ctrl+Shift+P` → **Dev Containers: Reopen in Container**.
 
-### Verificación
-
-Al terminar, adentro del contenedor:
+Al terminar, verificá adentro del contenedor:
 
 ```bash
 java -version      # 21
@@ -131,14 +109,89 @@ Esas cuatro reglas son el material de las clases siguientes.
 
 ---
 
+## Regenerar después de tocar el modelo
+
+Si editás `oncall.jh` —agregás un campo, cambiás un tipo, sumás una entidad— **no alcanza con volver a correr `jhipster jdl`**. Hay dos estados que sobreviven a la regeneración y hay que limpiar a mano.
+
+### 1. Regenerar el código
+
+```bash
+jhipster jdl oncall.jh --force
+```
+
+Sin `--force`, JHipster pregunta archivo por archivo si lo pisa.
+
+Si cambiaste algo del bloque `application { config { ... } }` —el tema, el idioma, el tipo de base— además hay que borrar la memoria del generador, que vive en `.yo-rc.json`:
+
+```bash
+rm -rf .yo-rc.json .jhipster/
+jhipster jdl oncall.jh --force
+```
+
+### 2. Recrear la base
+
+Este paso es obligatorio y es el que más se olvida.
+
+Liquibase guarda en la tabla `databasechangelog` un hash de cada changeset ejecutado. Al arrancar compara ese hash contra el archivo actual; si cambiaron, **frena antes de tocar nada** y la aplicación levanta con la base inutilizable:
+
+```
+Validation Failed: N changesets check sum
+  ..._added_entity_Alerta.xml::...::jhipster was: 9:7d48... but is now: 9:3600...
+```
+
+No es un error a esquivar: es Liquibase evitando dejarte un esquema inconsistente. La solución es empezar de cero.
+
+```bash
+docker compose -f src/main/docker/postgresql.yml down -v
+docker compose -f src/main/docker/postgresql.yml up -d
+./mvnw
+```
+
+El `-v` es lo que importa: sin eso el volumen sobrevive y el error se repite.
+
+**Si el error persiste**, el volumen no se borró — pasa cuando `down -v` se corre desde otro directorio, porque Compose deriva el nombre del proyecto de la carpeta. Vaciar el esquema directamente siempre funciona:
+
+```bash
+docker exec -it oncall-postgresql psql -U oncall -d oncall \
+  -c "drop schema public cascade; create schema public;"
+```
+
+Eso se lleva las tablas **y** la `databasechangelog`, que es lo que realmente bloquea.
+
+### 3. Verificar que arrancó limpio
+
+En el log de arranque, buscá la línea de Liquibase:
+
+```
+Liquibase has updated your database in 4821 ms
+```
+
+Varios segundos significa que creó el esquema y cargó los datos falsos. **Un segundo o menos significa que no hizo nada**: encontró todo aplicado y siguió de largo. Ese es el síntoma de una base vieja.
+
+Confirmación desde afuera:
+
+```bash
+docker exec -it oncall-postgresql psql -U oncall -d oncall -c "select count(*) from incidente;"
+```
+
+### Antes de commitear
+
+Después de regenerar, **siempre**:
+
+```bash
+git status
+```
+
+Si aparecen cientos de archivos, la aplicación generada quedó sin ignorar. El repositorio versiona el modelo y el entorno, no el código generado.
+
+---
+
 ## Estructura del repositorio
 
 ```
 isa-oncall-monolithic/
 ├── .devcontainer/
-│   ├── devcontainer.json         # Java 21 + Node 22 + Docker + JHipster 9.2
-│   ├── Dockerfile                # imagen base + parche del repo apt de Yarn
-│   └── devcontainer-lock.json    # versiones fijas de los features
+│   └── devcontainer.json    # Java 21 + Node 22 + Docker + JHipster 9.2
 ├── docs/
 │   └── modelo.md            # el modelo explicado en prosa
 ├── oncall.jh                # el modelo JDL
@@ -149,15 +202,15 @@ isa-oncall-monolithic/
 
 ## Versiones
 
-| | |
-|---|---|
-| JHipster | 9.2.0 |
-| Spring Boot | 4.0.x |
-| Java | 21 (LTS) |
-| Angular | 20.x |
-| Node | 22 (LTS) |
-| PostgreSQL | 17 |
-| Tests | JUnit 5 · Vitest · Cypress |
+|             |                            |
+| ----------- | -------------------------- |
+| JHipster    | 9.2.0                      |
+| Spring Boot | 4.0.x                      |
+| Java        | 21 (LTS)                   |
+| Angular     | 20.x                       |
+| Node        | 22 (LTS)                   |
+| PostgreSQL  | 17                         |
+| Tests       | JUnit 5 · Vitest · Cypress |
 
 ---
 
@@ -167,14 +220,31 @@ isa-oncall-monolithic/
 
 **`jhipster jdl` falla con un error de parseo.** Confirmá la versión con `jhipster --version`. El JDL está escrito para 9.2.0.
 
-**`jhipster jdl` genera cientos de archivos y después muere con `EPERM: operation not permitted, chmod`.** Estás en Windows con el repo clonado en una carpeta de Windows. Es lo que explica la [Clase 1](#windows--cloná-dentro-de-un-volumen-docker): volvé a clonar con **Clone Repository in Container Volume** y generá de nuevo desde ahí.
+**No querés depender de PostgreSQL.** Cambiá `devDatabaseType postgresql` por `devDatabaseType h2Disk` en el `oncall.jh` antes de generar. La aplicación levanta sin Docker, pero perdés el ejercicio de contenedores.
 
-Si querés limpiar la generación a medias antes de rehacerla:
+**El log está lleno de stack traces al arrancar.** Los `ProcessBuilder.start() debug` no son errores: son trazas de nivel DEBUG que emite el JDK al lanzar procesos externos, y las dispara el módulo de Docker Compose de Spring Boot buscando el binario de `docker`. Para silenciarlas, en `src/main/resources/config/application-dev.yml`:
 
-```bash
-git checkout -- . && git clean -fd
+```yaml
+logging:
+  level:
+    ROOT: INFO
+
+spring:
+  docker:
+    compose:
+      enabled: false
 ```
 
-Borra todo lo que el generador dejó. `oncall.jh` está versionado, así que no se pierde.
+---
 
-**No querés depender de PostgreSQL.** Cambiá `devDatabaseType postgresql` por `devDatabaseType h2Disk` en el `oncall.jh` antes de generar. La aplicación levanta sin Docker, pero perdés el ejercicio de contenedores.
+### Dos problemas conocidos del generador
+
+Los dos aparecieron generando este proyecto y **ya están corregidos en el `oncall.jh` del repositorio**. Se documentan porque son instructivos: el generador escribió más de quinientos archivos y dos de ellos vinieron mal.
+
+**`Bad value for type long` al listar una entidad.** El campo era un `TextBlob`, que JHipster mapea a `@Lob String`. Contra PostgreSQL, Hibernate intenta leer esa columna como un _large object_ —identificado por un OID, o sea un número— pero la columna contiene texto, y la conversión falla. Se manifiesta al hacer `GET` sobre la entidad, no al arrancar, así que parece que los datos falsos no se cargaron cuando en realidad sí están.
+
+> Solución: no usar `TextBlob` con PostgreSQL. Un `String maxlength(2000)` genera un `varchar` y se lee sin problema.
+
+**`Could not resolve ".../bootswatch/dist/flatly||file:https://fonts.googleapis.com/..."`.** El build del frontend falla por un `@import` mal armado en `content/scss/vendor.scss`: una plantilla del generador concatenó la ruta del tema Bootswatch con la URL de la fuente en un solo `url()`. Aparece solo cuando se pide un `clientTheme`.
+
+> Solución: quitar `clientTheme` del bloque `config`. Es puramente estético. Al regenerar hay que borrar `vendor.scss` y `.yo-rc.json`, porque si no el tema anterior queda recordado.
