@@ -95,7 +95,7 @@ entity Alerta {
   fingerprint String required maxlength(120)
   origen OrigenAlerta required
   resumen String required maxlength(200)
-  payload TextBlob
+  payload String maxlength(4000)
   recibidaEn Instant required
   procesada Boolean required
 }
@@ -106,7 +106,7 @@ entity Alerta {
  */
 entity Incidente {
   titulo String required maxlength(140)
-  descripcion TextBlob
+  descripcion String maxlength(2000)
   severidad Severidad required
   estado EstadoIncidente required
   detectadoEn Instant required
@@ -217,9 +217,9 @@ entity Notificacion {
 entity Postmortem {
   titulo String required maxlength(140)
   resumen String required maxlength(500)
-  causaRaiz TextBlob required
-  lineaDeTiempo TextBlob
-  leccionesAprendidas TextBlob
+  causaRaiz String required maxlength(2000)
+  lineaDeTiempo String maxlength(4000)
+  leccionesAprendidas String maxlength(2000)
   publicado Boolean required
   publicadoEn Instant
 }
