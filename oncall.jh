@@ -22,7 +22,6 @@ application {
     enableHibernateCache true
 
     clientFramework angular
-    clientTheme flatly
     buildTool maven
 
     enableTranslation true
