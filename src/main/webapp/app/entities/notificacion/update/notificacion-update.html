@@ -1,0 +1,211 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    <form name="editForm" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+      <h2
+        id="jhi-notificacion-heading"
+        data-cy="NotificacionCreateUpdateHeading"
+        jhiTranslate="oncallApp.notificacion.home.createOrEditLabel"
+      >
+        Crear o editar Notificacion
+      </h2>
+
+      <div>
+        <jhi-alert-error />
+
+        @if (editForm.controls.id.value !== null) {
+          <div class="mb-3">
+            <label class="form-label" for="field_id" jhiTranslate="global.field.id">ID</label>
+            <input type="number" class="form-control" name="id" id="field_id" data-cy="id" formControlName="id" [readonly]="true" />
+          </div>
+        }
+
+        @let canalRef = editForm.get('canal')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_canal" jhiTranslate="oncallApp.notificacion.canal">Canal</label>
+          <select class="form-control" name="canal" formControlName="canal" id="field_canal" data-cy="canal">
+            <option [ngValue]="null">{{ 'oncallApp.Canal.null' | translate }}</option>
+            @for (canal of canalValues; track $index) {
+              <option [value]="canal">{{ 'oncallApp.Canal.' + canal | translate }}</option>
+            }
+          </select>
+          @if (canalRef.invalid && (canalRef.dirty || canalRef.touched)) {
+            <div>
+              @if (canalRef.errors?.required) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.required">Este campo es obligatorio.</small>
+              }
+            </div>
+          }
+        </div>
+
+        @let destinoRef = editForm.get('destino')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_destino" jhiTranslate="oncallApp.notificacion.destino">Destino</label>
+          <input type="text" class="form-control" name="destino" id="field_destino" data-cy="destino" formControlName="destino" />
+          @if (destinoRef.invalid && (destinoRef.dirty || destinoRef.touched)) {
+            <div>
+              @if (destinoRef.errors?.required) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.required">Este campo es obligatorio.</small>
+              }
+              @if (destinoRef.errors?.maxlength) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.maxlength" [translateValues]="{ max: '120' }"
+                  >Este campo no puede superar más de 120 caracteres.</small
+                >
+              }
+            </div>
+          }
+        </div>
+
+        @let estadoRef = editForm.get('estado')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_estado" jhiTranslate="oncallApp.notificacion.estado">Estado</label>
+          <select class="form-control" name="estado" formControlName="estado" id="field_estado" data-cy="estado">
+            <option [ngValue]="null">{{ 'oncallApp.EstadoNotificacion.null' | translate }}</option>
+            @for (estadoNotificacion of estadoNotificacionValues; track $index) {
+              <option [value]="estadoNotificacion">{{ 'oncallApp.EstadoNotificacion.' + estadoNotificacion | translate }}</option>
+            }
+          </select>
+          @if (estadoRef.invalid && (estadoRef.dirty || estadoRef.touched)) {
+            <div>
+              @if (estadoRef.errors?.required) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.required">Este campo es obligatorio.</small>
+              }
+            </div>
+          }
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="field_enviadaEn" jhiTranslate="oncallApp.notificacion.enviadaEn">Enviada En</label>
+          <div class="d-flex">
+            <input
+              id="field_enviadaEn"
+              data-cy="enviadaEn"
+              type="datetime-local"
+              class="form-control"
+              name="enviadaEn"
+              formControlName="enviadaEn"
+              placeholder="YYYY-MM-DD HH:mm"
+            />
+          </div>
+        </div>
+
+        @let intentosRef = editForm.get('intentos')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_intentos" jhiTranslate="oncallApp.notificacion.intentos">Intentos</label>
+          <input type="number" class="form-control" name="intentos" id="field_intentos" data-cy="intentos" formControlName="intentos" />
+          @if (intentosRef.invalid && (intentosRef.dirty || intentosRef.touched)) {
+            <div>
+              @if (intentosRef.errors?.required) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.required">Este campo es obligatorio.</small>
+              }
+              @if (intentosRef.errors?.min) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.min" [translateValues]="{ min: '0' }"
+                  >Este campo debe ser mayor que 0.</small
+                >
+              }
+              @if (intentosRef.errors?.max) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.max" [translateValues]="{ max: '10' }"
+                  >Este campo no puede ser mayor que 10.</small
+                >
+              }
+              <small class="form-text text-danger" [hidden]="!intentosRef.errors?.number" jhiTranslate="entity.validation.number"
+                >Este campo debe ser un número.</small
+              >
+            </div>
+          }
+        </div>
+
+        @let errorMensajeRef = editForm.get('errorMensaje')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_errorMensaje" jhiTranslate="oncallApp.notificacion.errorMensaje">Error Mensaje</label>
+          <input
+            type="text"
+            class="form-control"
+            name="errorMensaje"
+            id="field_errorMensaje"
+            data-cy="errorMensaje"
+            formControlName="errorMensaje"
+          />
+          @if (errorMensajeRef.invalid && (errorMensajeRef.dirty || errorMensajeRef.touched)) {
+            <div>
+              @if (errorMensajeRef.errors?.maxlength) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.maxlength" [translateValues]="{ max: '255' }"
+                  >Este campo no puede superar más de 255 caracteres.</small
+                >
+              }
+            </div>
+          }
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="field_incidente" jhiTranslate="oncallApp.notificacion.incidente">Incidente</label>
+          <select
+            class="form-control"
+            id="field_incidente"
+            data-cy="incidente"
+            name="incidente"
+            formControlName="incidente"
+            [compareWith]="compareIncidente"
+          >
+            @if (editForm.get(['incidente'])!.value === null) {
+              <option [ngValue]="null" selected></option>
+            }
+            @for (incidenteOption of incidentesSharedCollection(); track $index) {
+              <option [ngValue]="incidenteOption">{{ incidenteOption.titulo }}</option>
+            }
+          </select>
+        </div>
+        @if (editForm.get(['incidente'])!.invalid && (editForm.get(['incidente'])!.dirty || editForm.get(['incidente'])!.touched)) {
+          <div>
+            @if (editForm.get(['incidente'])?.errors?.required) {
+              <small class="form-text text-danger" jhiTranslate="entity.validation.required">Este campo es obligatorio.</small>
+            }
+          </div>
+        }
+
+        <div class="mb-3">
+          <label class="form-label" for="field_destinatario" jhiTranslate="oncallApp.notificacion.destinatario">Destinatario</label>
+          <select
+            class="form-control"
+            id="field_destinatario"
+            data-cy="destinatario"
+            name="destinatario"
+            formControlName="destinatario"
+            [compareWith]="compareUser"
+          >
+            @if (!editForm.get('destinatario')!.value) {
+              <option [ngValue]="null" selected></option>
+            }
+            @for (userOption of usersSharedCollection(); track $index) {
+              <option [ngValue]="userOption">{{ userOption.login }}</option>
+            }
+          </select>
+        </div>
+        @if (
+          editForm.get(['destinatario'])!.invalid && (editForm.get(['destinatario'])!.dirty || editForm.get(['destinatario'])!.touched)
+        ) {
+          <div>
+            @if (editForm.get(['destinatario'])?.errors?.required) {
+              <small class="form-text text-danger" jhiTranslate="entity.validation.required">Este campo es obligatorio.</small>
+            }
+          </div>
+        }
+      </div>
+
+      <div>
+        <button type="button" id="cancel-save" data-cy="entityCreateCancelButton" class="btn btn-secondary" (click)="previousState()">
+          <fa-icon icon="ban" />&nbsp;<span jhiTranslate="entity.action.cancel">Cancelar</span>
+        </button>
+
+        <button
+          type="submit"
+          id="save-entity"
+          data-cy="entityCreateSaveButton"
+          [disabled]="editForm.invalid || isSaving()"
+          class="btn btn-primary"
+        >
+          <fa-icon icon="save" />&nbsp;<span jhiTranslate="entity.action.save">Guardar</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

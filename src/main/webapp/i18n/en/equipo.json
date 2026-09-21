@@ -1,0 +1,28 @@
+{
+  "oncallApp": {
+    "equipo": {
+      "home": {
+        "title": "Equipos",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "Create a new Equipo",
+        "createOrEditLabel": "Create or edit a Equipo",
+        "notFound": "No Equipos found"
+      },
+      "created": "A new Equipo is created with identifier {{ param }}",
+      "updated": "A Equipo is updated with identifier {{ param }}",
+      "deleted": "A Equipo is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Equipo {{ id }}?"
+      },
+      "detail": {
+        "title": "Equipo"
+      },
+      "id": "ID",
+      "nombre": "Nombre",
+      "emailContacto": "Email Contacto",
+      "canalChat": "Canal Chat",
+      "servicio": "Servicio",
+      "rotacion": "Rotacion"
+    }
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "oncallApp": {
+    "rotacion": {
+      "home": {
+        "title": "Rotacions",
+        "refreshListLabel": "Refrescar lista",
+        "createLabel": "Crear nuevo Rotacion",
+        "createOrEditLabel": "Crear o editar Rotacion",
+        "notFound": "Ningún Rotacions encontrado"
+      },
+      "created": "Un nuevo Rotacion ha sido creado con el identificador {{ param }}",
+      "updated": "Un Rotacion ha sido actualizado con el identificador {{ param }}",
+      "deleted": "Un Rotacion ha sido eliminado con el identificador {{ param }}",
+      "delete": {
+        "question": "¿Seguro que quiere eliminar Rotacion {{ id }}?"
+      },
+      "detail": {
+        "title": "Rotacion"
+      },
+      "id": "ID",
+      "nombre": "Nombre",
+      "tipo": "Tipo",
+      "zonaHoraria": "Zona Horaria",
+      "activa": "Activa",
+      "equipo": "Equipo",
+      "turno": "Turno",
+      "paso": "Paso"
+    }
+  }
+}

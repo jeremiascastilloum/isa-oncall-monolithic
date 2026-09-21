@@ -1,0 +1,11 @@
+export enum EstadoIncidente {
+  ABIERTO = 'ABIERTO',
+
+  RECONOCIDO = 'RECONOCIDO',
+
+  MITIGADO = 'MITIGADO',
+
+  RESUELTO = 'RESUELTO',
+
+  CERRADO = 'CERRADO',
+}

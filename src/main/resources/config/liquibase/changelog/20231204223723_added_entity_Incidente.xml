@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd
+                        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+    <!--
+        Added the entity Incidente.
+    -->
+    <changeSet id="20231204223723-1" author="jhipster">
+        <createTable tableName="incidente" remarks="Incidente: la interrupcion real que estamos gestionando.\nLas marcas de tiempo son la materia prima del MTTA y el MTTR.">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="titulo" type="varchar(140)">
+                <constraints nullable="false" />
+            </column>
+            <column name="descripcion" type="varchar(2000)">
+                <constraints nullable="true" />
+            </column>
+            <column name="severidad" type="varchar(255)">
+                <constraints nullable="false" />
+            </column>
+            <column name="estado" type="varchar(255)">
+                <constraints nullable="false" />
+            </column>
+            <column name="detectado_en" type="${datetimeType}">
+                <constraints nullable="false" />
+            </column>
+            <column name="reconocido_en" type="${datetimeType}">
+                <constraints nullable="true" />
+            </column>
+            <column name="mitigado_en" type="${datetimeType}">
+                <constraints nullable="true" />
+            </column>
+            <column name="resuelto_en" type="${datetimeType}">
+                <constraints nullable="true" />
+            </column>
+            <column name="usuarios_afectados" type="integer">
+                <constraints nullable="true" />
+            </column>
+            <column name="cumplio_objetivo" type="boolean">
+                <constraints nullable="true" />
+            </column>
+            <column name="comandante_id" type="bigint">
+                <constraints nullable="true" />
+            </column>
+            <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here -->
+        </createTable>
+        <dropDefaultValue tableName="incidente" columnName="detectado_en" columnDataType="${datetimeType}"/>
+        <dropDefaultValue tableName="incidente" columnName="reconocido_en" columnDataType="${datetimeType}"/>
+        <dropDefaultValue tableName="incidente" columnName="mitigado_en" columnDataType="${datetimeType}"/>
+        <dropDefaultValue tableName="incidente" columnName="resuelto_en" columnDataType="${datetimeType}"/>
+    </changeSet>
+
+    <changeSet id="20231204223723-1-relations" author="jhipster">
+
+        <createTable tableName="rel_incidente__servicio">
+            <column name="servicio_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="incidente_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addPrimaryKey columnNames="incidente_id, servicio_id" tableName="rel_incidente__servicio"/>
+    </changeSet>
+
+    <!-- jhipster-needle-liquibase-add-changeset - JHipster will add changesets here -->
+
+    <!--
+        Load sample data generated with Faker.js
+        - This data can be easily edited using a CSV editor (or even MS Excel) and
+          is located in the 'src/main/resources/config/liquibase/fake-data' directory
+        - By default this data is applied when running with the JHipster 'dev' profile.
+          This can be customized by adding or removing 'faker' in the 'spring.liquibase.contexts'
+          Spring Boot configuration key.
+    -->
+    <changeSet id="20231204223723-1-data" author="jhipster" context="faker">
+        <loadData
+                  file="../fake-data/incidente.csv"
+                  relativeToChangelogFile="true"
+                  separator=";"
+                  tableName="incidente"
+                  usePreparedStatements="true">
+            <column name="id" type="numeric"/>
+            <column name="titulo" type="string"/>
+            <column name="descripcion" type="string"/>
+            <column name="severidad" type="string"/>
+            <column name="estado" type="string"/>
+            <column name="detectado_en" type="date"/>
+            <column name="reconocido_en" type="date"/>
+            <column name="mitigado_en" type="date"/>
+            <column name="resuelto_en" type="date"/>
+            <column name="usuarios_afectados" type="numeric"/>
+            <column name="cumplio_objetivo" type="boolean"/>
+            <!-- jhipster-needle-liquibase-add-loadcolumn - JHipster (and/or extensions) can add load columns here -->
+        </loadData>
+    </changeSet>
+</databaseChangeLog>

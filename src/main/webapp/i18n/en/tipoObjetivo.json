@@ -1,0 +1,10 @@
+{
+  "oncallApp": {
+    "TipoObjetivo": {
+      "null": "",
+      "TIEMPO_DE_RECONOCIMIENTO": "TIEMPO_DE_RECONOCIMIENTO",
+      "TIEMPO_DE_RESOLUCION": "TIEMPO_DE_RESOLUCION",
+      "DISPONIBILIDAD": "DISPONIBILIDAD"
+    }
+  }
+}

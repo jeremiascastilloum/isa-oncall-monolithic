@@ -1,0 +1,42 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    @if (equipo(); as equipoRef) {
+      <div>
+        <h2 data-cy="equipoDetailsHeading"><span jhiTranslate="oncallApp.equipo.detail.title">Equipo</span></h2>
+
+        <hr />
+
+        <jhi-alert-error />
+
+        <jhi-alert />
+
+        <dl class="row-md jh-entity-details">
+          <dt><span jhiTranslate="global.field.id">ID</span></dt>
+          <dd>
+            <span>{{ equipoRef.id }}</span>
+          </dd>
+          <dt><span jhiTranslate="oncallApp.equipo.nombre">Nombre</span></dt>
+          <dd>
+            <span>{{ equipoRef.nombre }}</span>
+          </dd>
+          <dt><span jhiTranslate="oncallApp.equipo.emailContacto">Email Contacto</span></dt>
+          <dd>
+            <span>{{ equipoRef.emailContacto }}</span>
+          </dd>
+          <dt><span jhiTranslate="oncallApp.equipo.canalChat">Canal Chat</span></dt>
+          <dd>
+            <span>{{ equipoRef.canalChat }}</span>
+          </dd>
+        </dl>
+
+        <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+          <fa-icon icon="arrow-left" />&nbsp;<span jhiTranslate="entity.action.back">Volver</span>
+        </button>
+
+        <button type="button" [routerLink]="['/equipo', equipoRef.id, 'edit']" class="btn btn-primary">
+          <fa-icon icon="pencil-alt" />&nbsp;<span jhiTranslate="entity.action.edit">Editar</span>
+        </button>
+      </div>
+    }
+  </div>
+</div>

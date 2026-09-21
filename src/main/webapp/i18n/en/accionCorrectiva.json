@@ -1,0 +1,30 @@
+{
+  "oncallApp": {
+    "accionCorrectiva": {
+      "home": {
+        "title": "Accion Correctivas",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "Create a new Accion Correctiva",
+        "createOrEditLabel": "Create or edit a Accion Correctiva",
+        "notFound": "No Accion Correctivas found"
+      },
+      "created": "A new Accion Correctiva is created with identifier {{ param }}",
+      "updated": "A Accion Correctiva is updated with identifier {{ param }}",
+      "deleted": "A Accion Correctiva is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Accion Correctiva {{ id }}?"
+      },
+      "detail": {
+        "title": "Accion Correctiva"
+      },
+      "id": "ID",
+      "descripcion": "Descripcion",
+      "prioridad": "Prioridad",
+      "estado": "Estado",
+      "fechaLimite": "Fecha Limite",
+      "ticketUrl": "Ticket Url",
+      "postmortem": "Postmortem",
+      "responsable": "Responsable"
+    }
+  }
+}

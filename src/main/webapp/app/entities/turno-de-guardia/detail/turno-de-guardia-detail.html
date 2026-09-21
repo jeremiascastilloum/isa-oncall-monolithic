@@ -1,0 +1,58 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    @if (turnoDeGuardia(); as turnoDeGuardiaRef) {
+      <div>
+        <h2 data-cy="turnoDeGuardiaDetailsHeading"><span jhiTranslate="oncallApp.turnoDeGuardia.detail.title">Turno De Guardia</span></h2>
+
+        <hr />
+
+        <jhi-alert-error />
+
+        <jhi-alert />
+
+        <dl class="row-md jh-entity-details">
+          <dt><span jhiTranslate="global.field.id">ID</span></dt>
+          <dd>
+            <span>{{ turnoDeGuardiaRef.id }}</span>
+          </dd>
+          <dt><span jhiTranslate="oncallApp.turnoDeGuardia.desde">Desde</span></dt>
+          <dd>
+            <span>{{ turnoDeGuardiaRef.desde | formatMediumDatetime }}</span>
+          </dd>
+          <dt><span jhiTranslate="oncallApp.turnoDeGuardia.hasta">Hasta</span></dt>
+          <dd>
+            <span>{{ turnoDeGuardiaRef.hasta | formatMediumDatetime }}</span>
+          </dd>
+          <dt><span jhiTranslate="oncallApp.turnoDeGuardia.esReemplazo">Es Reemplazo</span></dt>
+          <dd>
+            <span>{{ turnoDeGuardiaRef.esReemplazo }}</span>
+          </dd>
+          <dt><span jhiTranslate="oncallApp.turnoDeGuardia.nota">Nota</span></dt>
+          <dd>
+            <span>{{ turnoDeGuardiaRef.nota }}</span>
+          </dd>
+          <dt><span jhiTranslate="oncallApp.turnoDeGuardia.rotacion">Rotacion</span></dt>
+          <dd>
+            @if (turnoDeGuardia()!.rotacion) {
+              <div>
+                <a [routerLink]="['/rotacion', turnoDeGuardia()!.rotacion?.id, 'view']">{{ turnoDeGuardiaRef.rotacion?.nombre }}</a>
+              </div>
+            }
+          </dd>
+          <dt><span jhiTranslate="oncallApp.turnoDeGuardia.responsable">Responsable</span></dt>
+          <dd>
+            <span>{{ turnoDeGuardiaRef.responsable?.login }}</span>
+          </dd>
+        </dl>
+
+        <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+          <fa-icon icon="arrow-left" />&nbsp;<span jhiTranslate="entity.action.back">Volver</span>
+        </button>
+
+        <button type="button" [routerLink]="['/turno-de-guardia', turnoDeGuardiaRef.id, 'edit']" class="btn btn-primary">
+          <fa-icon icon="pencil-alt" />&nbsp;<span jhiTranslate="entity.action.edit">Editar</span>
+        </button>
+      </div>
+    }
+  </div>
+</div>

@@ -1,0 +1,65 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    @if (objetivoDeServicio(); as objetivoDeServicioRef) {
+      <div>
+        <h2 data-cy="objetivoDeServicioDetailsHeading">
+          <span jhiTranslate="oncallApp.objetivoDeServicio.detail.title">Objetivo De Servicio</span>
+        </h2>
+
+        <hr />
+
+        <jhi-alert-error />
+
+        <jhi-alert />
+
+        <dl class="row-md jh-entity-details">
+          <dt><span jhiTranslate="global.field.id">ID</span></dt>
+          <dd>
+            <span>{{ objetivoDeServicioRef.id }}</span>
+          </dd>
+          <dt><span jhiTranslate="oncallApp.objetivoDeServicio.tipo">Tipo</span></dt>
+          <dd>
+            <span [jhiTranslate]="'oncallApp.TipoObjetivo.' + (objetivoDeServicioRef.tipo ?? 'null')">{{
+              {
+                null: '',
+                TIEMPO_DE_RECONOCIMIENTO: 'TIEMPO_DE_RECONOCIMIENTO',
+                TIEMPO_DE_RESOLUCION: 'TIEMPO_DE_RESOLUCION',
+                DISPONIBILIDAD: 'DISPONIBILIDAD',
+              }[objetivoDeServicioRef.tipo ?? 'null']
+            }}</span>
+          </dd>
+          <dt><span jhiTranslate="oncallApp.objetivoDeServicio.severidadAplicable">Severidad Aplicable</span></dt>
+          <dd>
+            <span [jhiTranslate]="'oncallApp.Severidad.' + (objetivoDeServicioRef.severidadAplicable ?? 'null')">{{
+              { null: '', SEV1: 'SEV1', SEV2: 'SEV2', SEV3: 'SEV3', SEV4: 'SEV4' }[objetivoDeServicioRef.severidadAplicable ?? 'null']
+            }}</span>
+          </dd>
+          <dt><span jhiTranslate="oncallApp.objetivoDeServicio.minutosObjetivo">Minutos Objetivo</span></dt>
+          <dd>
+            <span>{{ objetivoDeServicioRef.minutosObjetivo }}</span>
+          </dd>
+          <dt><span jhiTranslate="oncallApp.objetivoDeServicio.descripcion">Descripcion</span></dt>
+          <dd>
+            <span>{{ objetivoDeServicioRef.descripcion }}</span>
+          </dd>
+          <dt><span jhiTranslate="oncallApp.objetivoDeServicio.servicio">Servicio</span></dt>
+          <dd>
+            @if (objetivoDeServicio()!.servicio) {
+              <div>
+                <a [routerLink]="['/servicio', objetivoDeServicio()!.servicio?.id, 'view']">{{ objetivoDeServicioRef.servicio?.nombre }}</a>
+              </div>
+            }
+          </dd>
+        </dl>
+
+        <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+          <fa-icon icon="arrow-left" />&nbsp;<span jhiTranslate="entity.action.back">Volver</span>
+        </button>
+
+        <button type="button" [routerLink]="['/objetivo-de-servicio', objetivoDeServicioRef.id, 'edit']" class="btn btn-primary">
+          <fa-icon icon="pencil-alt" />&nbsp;<span jhiTranslate="entity.action.edit">Editar</span>
+        </button>
+      </div>
+    }
+  </div>
+</div>

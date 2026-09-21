@@ -1,0 +1,170 @@
+<div>
+  <h2 id="page-heading" data-cy="ServicioHeading">
+    <span jhiTranslate="oncallApp.servicio.home.title">Servicios</span>
+
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-info me-2" (click)="load()" [disabled]="isLoading()">
+        <fa-icon icon="sync" [animation]="isLoading() ? 'spin' : undefined" />
+        <span jhiTranslate="oncallApp.servicio.home.refreshListLabel">Refrescar lista</span>
+      </button>
+
+      <button
+        id="jh-create-entity"
+        data-cy="entityCreateButton"
+        class="btn btn-primary jh-create-entity create-servicio"
+        [routerLink]="['/servicio/new']"
+      >
+        <fa-icon icon="plus" />
+        <span jhiTranslate="oncallApp.servicio.home.createLabel">Crear nuevo Servicio</span>
+      </button>
+    </div>
+  </h2>
+
+  <jhi-alert-error />
+
+  <jhi-alert />
+
+  @if (servicios().length === 0) {
+    <div class="alert alert-warning" id="no-result">
+      <span jhiTranslate="oncallApp.servicio.home.notFound">Ningún Servicios encontrado</span>
+    </div>
+  } @else {
+    <div class="table-responsive table-entities" id="entities">
+      <table class="table table-striped" aria-describedby="page-heading">
+        <thead>
+          <tr jhiSort [(sortState)]="sortState" (sortChange)="navigateToWithComponentValues($event)">
+            <th scope="col" jhiSortBy="id">
+              <div class="d-flex">
+                <span jhiTranslate="global.field.id">ID</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="nombre">
+              <div class="d-flex">
+                <span jhiTranslate="oncallApp.servicio.nombre">Nombre</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="descripcion">
+              <div class="d-flex">
+                <span jhiTranslate="oncallApp.servicio.descripcion">Descripcion</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="criticidad">
+              <div class="d-flex">
+                <span jhiTranslate="oncallApp.servicio.criticidad">Criticidad</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="entorno">
+              <div class="d-flex">
+                <span jhiTranslate="oncallApp.servicio.entorno">Entorno</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="repositorioUrl">
+              <div class="d-flex">
+                <span jhiTranslate="oncallApp.servicio.repositorioUrl">Repositorio Url</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="activo">
+              <div class="d-flex">
+                <span jhiTranslate="oncallApp.servicio.activo">Activo</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="equipo.nombre">
+              <div class="d-flex">
+                <span jhiTranslate="oncallApp.servicio.equipo">Equipo</span>
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="incidente.id">
+              <div class="d-flex">
+                <span jhiTranslate="oncallApp.servicio.incidente">Incidente</span>
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col"></th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (servicio of servicios(); track trackId(servicio)) {
+            <tr data-cy="entityTable">
+              <td>
+                <a [routerLink]="['/servicio', servicio.id, 'view']">{{ servicio.id }}</a>
+              </td>
+              <td>{{ servicio.nombre }}</td>
+              <td>{{ servicio.descripcion }}</td>
+              <td [jhiTranslate]="'oncallApp.Criticidad.' + (servicio.criticidad ?? 'null')">
+                {{ { null: '', TIER1: 'TIER1', TIER2: 'TIER2', TIER3: 'TIER3' }[servicio.criticidad ?? 'null'] }}
+              </td>
+              <td [jhiTranslate]="'oncallApp.Entorno.' + (servicio.entorno ?? 'null')">
+                {{ { null: '', PRODUCCION: 'PRODUCCION', STAGING: 'STAGING', DESARROLLO: 'DESARROLLO' }[servicio.entorno ?? 'null'] }}
+              </td>
+              <td>{{ servicio.repositorioUrl }}</td>
+              <td>{{ servicio.activo }}</td>
+              <td>
+                @if (servicio.equipo) {
+                  <div>
+                    <a [routerLink]="['/equipo', servicio.equipo.id, 'view']">{{ servicio.equipo.nombre }}</a>
+                  </div>
+                }
+              </td>
+              <td>
+                @for (incidente of servicio.incidentes; track $index; let last = $last) {
+                  <span>
+                    <a class="form-control-static" [routerLink]="['/incidente', incidente.id, 'view']">{{ incidente.id }}</a
+                    >{{ last ? '' : ', ' }}
+                  </span>
+                }
+              </td>
+              <td class="text-end">
+                <div class="btn-group">
+                  <button
+                    type="submit"
+                    [routerLink]="['/alerta']"
+                    [queryParams]="{ 'filter[servicioId.in]': servicio.id }"
+                    class="btn btn-info btn-sm"
+                    data-cy="filterOtherEntityButton"
+                  >
+                    <fa-icon icon="eye" />
+                    <span
+                      class="d-none d-md-inline"
+                      jhiTranslate="entity.action.show"
+                      [translateValues]="{ otherEntity: ('oncallApp.servicio.alerta' | translate) }"
+                      >Show Alerta</span
+                    >
+                  </button>
+                  <a [routerLink]="['/servicio', servicio.id, 'view']" class="btn btn-info btn-sm" data-cy="entityDetailsButton">
+                    <fa-icon icon="eye" />
+                    <span class="d-none d-md-inline" jhiTranslate="entity.action.view">Vista</span>
+                  </a>
+
+                  <a [routerLink]="['/servicio', servicio.id, 'edit']" class="btn btn-primary btn-sm" data-cy="entityEditButton">
+                    <fa-icon icon="pencil-alt" />
+                    <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Editar</span>
+                  </a>
+
+                  <button type="submit" (click)="delete(servicio)" class="btn btn-danger btn-sm" data-cy="entityDeleteButton">
+                    <fa-icon icon="times" />
+                    <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Eliminar</span>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</div>

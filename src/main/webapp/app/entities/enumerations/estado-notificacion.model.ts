@@ -1,0 +1,11 @@
+export enum EstadoNotificacion {
+  PENDIENTE = 'PENDIENTE',
+
+  ENVIADA = 'ENVIADA',
+
+  ENTREGADA = 'ENTREGADA',
+
+  FALLIDA = 'FALLIDA',
+
+  RECONOCIDA = 'RECONOCIDA',
+}

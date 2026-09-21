@@ -1,0 +1,66 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    @if (postmortem(); as postmortemRef) {
+      <div>
+        <h2 data-cy="postmortemDetailsHeading"><span jhiTranslate="oncallApp.postmortem.detail.title">Postmortem</span></h2>
+
+        <hr />
+
+        <jhi-alert-error />
+
+        <jhi-alert />
+
+        <dl class="row-md jh-entity-details">
+          <dt><span jhiTranslate="global.field.id">ID</span></dt>
+          <dd>
+            <span>{{ postmortemRef.id }}</span>
+          </dd>
+          <dt><span jhiTranslate="oncallApp.postmortem.titulo">Titulo</span></dt>
+          <dd>
+            <span>{{ postmortemRef.titulo }}</span>
+          </dd>
+          <dt><span jhiTranslate="oncallApp.postmortem.resumen">Resumen</span></dt>
+          <dd>
+            <span>{{ postmortemRef.resumen }}</span>
+          </dd>
+          <dt><span jhiTranslate="oncallApp.postmortem.causaRaiz">Causa Raiz</span></dt>
+          <dd>
+            <span>{{ postmortemRef.causaRaiz }}</span>
+          </dd>
+          <dt><span jhiTranslate="oncallApp.postmortem.lineaDeTiempo">Linea De Tiempo</span></dt>
+          <dd>
+            <span>{{ postmortemRef.lineaDeTiempo }}</span>
+          </dd>
+          <dt><span jhiTranslate="oncallApp.postmortem.leccionesAprendidas">Lecciones Aprendidas</span></dt>
+          <dd>
+            <span>{{ postmortemRef.leccionesAprendidas }}</span>
+          </dd>
+          <dt><span jhiTranslate="oncallApp.postmortem.publicado">Publicado</span></dt>
+          <dd>
+            <span>{{ postmortemRef.publicado }}</span>
+          </dd>
+          <dt><span jhiTranslate="oncallApp.postmortem.publicadoEn">Publicado En</span></dt>
+          <dd>
+            <span>{{ postmortemRef.publicadoEn | formatMediumDatetime }}</span>
+          </dd>
+          <dt><span jhiTranslate="oncallApp.postmortem.incidente">Incidente</span></dt>
+          <dd>
+            @if (postmortem()!.incidente) {
+              <div>
+                <a [routerLink]="['/incidente', postmortem()!.incidente?.id, 'view']">{{ postmortemRef.incidente?.titulo }}</a>
+              </div>
+            }
+          </dd>
+        </dl>
+
+        <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+          <fa-icon icon="arrow-left" />&nbsp;<span jhiTranslate="entity.action.back">Volver</span>
+        </button>
+
+        <button type="button" [routerLink]="['/postmortem', postmortemRef.id, 'edit']" class="btn btn-primary">
+          <fa-icon icon="pencil-alt" />&nbsp;<span jhiTranslate="entity.action.edit">Editar</span>
+        </button>
+      </div>
+    }
+  </div>
+</div>

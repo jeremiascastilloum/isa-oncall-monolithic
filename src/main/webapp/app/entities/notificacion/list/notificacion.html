@@ -1,0 +1,163 @@
+<div>
+  <h2 id="page-heading" data-cy="NotificacionHeading">
+    <span jhiTranslate="oncallApp.notificacion.home.title">Notificacions</span>
+
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-info me-2" (click)="load()" [disabled]="isLoading()">
+        <fa-icon icon="sync" [animation]="isLoading() ? 'spin' : undefined" />
+        <span jhiTranslate="oncallApp.notificacion.home.refreshListLabel">Refrescar lista</span>
+      </button>
+
+      <button
+        id="jh-create-entity"
+        data-cy="entityCreateButton"
+        class="btn btn-primary jh-create-entity create-notificacion"
+        [routerLink]="['/notificacion/new']"
+      >
+        <fa-icon icon="plus" />
+        <span jhiTranslate="oncallApp.notificacion.home.createLabel">Crear nuevo Notificacion</span>
+      </button>
+    </div>
+  </h2>
+
+  <jhi-alert-error />
+
+  <jhi-alert />
+
+  @if (notificacions().length === 0) {
+    <div class="alert alert-warning" id="no-result">
+      <span jhiTranslate="oncallApp.notificacion.home.notFound">Ningún Notificacions encontrado</span>
+    </div>
+  } @else {
+    <div class="table-responsive table-entities" id="entities">
+      <table class="table table-striped" aria-describedby="page-heading">
+        <thead>
+          <tr jhiSort [(sortState)]="sortState" (sortChange)="navigateToWithComponentValues($event)">
+            <th scope="col" jhiSortBy="id">
+              <div class="d-flex">
+                <span jhiTranslate="global.field.id">ID</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="canal">
+              <div class="d-flex">
+                <span jhiTranslate="oncallApp.notificacion.canal">Canal</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="destino">
+              <div class="d-flex">
+                <span jhiTranslate="oncallApp.notificacion.destino">Destino</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="estado">
+              <div class="d-flex">
+                <span jhiTranslate="oncallApp.notificacion.estado">Estado</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="enviadaEn">
+              <div class="d-flex">
+                <span jhiTranslate="oncallApp.notificacion.enviadaEn">Enviada En</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="intentos">
+              <div class="d-flex">
+                <span jhiTranslate="oncallApp.notificacion.intentos">Intentos</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="errorMensaje">
+              <div class="d-flex">
+                <span jhiTranslate="oncallApp.notificacion.errorMensaje">Error Mensaje</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="incidente.titulo">
+              <div class="d-flex">
+                <span jhiTranslate="oncallApp.notificacion.incidente">Incidente</span>
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="destinatario.login">
+              <div class="d-flex">
+                <span jhiTranslate="oncallApp.notificacion.destinatario">Destinatario</span>
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col"></th>
+          </tr>
+        </thead>
+        <tbody infinite-scroll (scrolled)="loadNextPage()" [infiniteScrollDisabled]="!hasMorePage()" [infiniteScrollDistance]="0">
+          @for (notificacion of notificacions(); track trackId(notificacion)) {
+            <tr data-cy="entityTable">
+              <td>
+                <a [routerLink]="['/notificacion', notificacion.id, 'view']">{{ notificacion.id }}</a>
+              </td>
+              <td [jhiTranslate]="'oncallApp.Canal.' + (notificacion.canal ?? 'null')">
+                {{
+                  { null: '', EMAIL: 'EMAIL', SMS: 'SMS', PUSH: 'PUSH', WEBHOOK: 'WEBHOOK', LLAMADA: 'LLAMADA' }[
+                    notificacion.canal ?? 'null'
+                  ]
+                }}
+              </td>
+              <td>{{ notificacion.destino }}</td>
+              <td [jhiTranslate]="'oncallApp.EstadoNotificacion.' + (notificacion.estado ?? 'null')">
+                {{
+                  {
+                    null: '',
+                    PENDIENTE: 'PENDIENTE',
+                    ENVIADA: 'ENVIADA',
+                    ENTREGADA: 'ENTREGADA',
+                    FALLIDA: 'FALLIDA',
+                    RECONOCIDA: 'RECONOCIDA',
+                  }[notificacion.estado ?? 'null']
+                }}
+              </td>
+              <td>{{ notificacion.enviadaEn | formatMediumDatetime }}</td>
+              <td>{{ notificacion.intentos }}</td>
+              <td>{{ notificacion.errorMensaje }}</td>
+              <td>
+                @if (notificacion.incidente) {
+                  <div>
+                    <a [routerLink]="['/incidente', notificacion.incidente.id, 'view']">{{ notificacion.incidente.titulo }}</a>
+                  </div>
+                }
+              </td>
+              <td>
+                {{ notificacion.destinatario?.login }}
+              </td>
+              <td class="text-end">
+                <div class="btn-group">
+                  <a [routerLink]="['/notificacion', notificacion.id, 'view']" class="btn btn-info btn-sm" data-cy="entityDetailsButton">
+                    <fa-icon icon="eye" />
+                    <span class="d-none d-md-inline" jhiTranslate="entity.action.view">Vista</span>
+                  </a>
+
+                  <a [routerLink]="['/notificacion', notificacion.id, 'edit']" class="btn btn-primary btn-sm" data-cy="entityEditButton">
+                    <fa-icon icon="pencil-alt" />
+                    <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Editar</span>
+                  </a>
+
+                  <button type="submit" (click)="delete(notificacion)" class="btn btn-danger btn-sm" data-cy="entityDeleteButton">
+                    <fa-icon icon="times" />
+                    <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Eliminar</span>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</div>

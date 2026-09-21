@@ -1,0 +1,70 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    @if (pasoEscalamiento(); as pasoEscalamientoRef) {
+      <div>
+        <h2 data-cy="pasoEscalamientoDetailsHeading">
+          <span jhiTranslate="oncallApp.pasoEscalamiento.detail.title">Paso Escalamiento</span>
+        </h2>
+
+        <hr />
+
+        <jhi-alert-error />
+
+        <jhi-alert />
+
+        <dl class="row-md jh-entity-details">
+          <dt><span jhiTranslate="global.field.id">ID</span></dt>
+          <dd>
+            <span>{{ pasoEscalamientoRef.id }}</span>
+          </dd>
+          <dt><span jhiTranslate="oncallApp.pasoEscalamiento.orden">Orden</span></dt>
+          <dd>
+            <span>{{ pasoEscalamientoRef.orden }}</span>
+          </dd>
+          <dt><span jhiTranslate="oncallApp.pasoEscalamiento.esperaMinutos">Espera Minutos</span></dt>
+          <dd>
+            <span>{{ pasoEscalamientoRef.esperaMinutos }}</span>
+          </dd>
+          <dt><span jhiTranslate="oncallApp.pasoEscalamiento.canal">Canal</span></dt>
+          <dd>
+            <span [jhiTranslate]="'oncallApp.Canal.' + (pasoEscalamientoRef.canal ?? 'null')">{{
+              { null: '', EMAIL: 'EMAIL', SMS: 'SMS', PUSH: 'PUSH', WEBHOOK: 'WEBHOOK', LLAMADA: 'LLAMADA' }[
+                pasoEscalamientoRef.canal ?? 'null'
+              ]
+            }}</span>
+          </dd>
+          <dt><span jhiTranslate="oncallApp.pasoEscalamiento.politica">Politica</span></dt>
+          <dd>
+            @if (pasoEscalamiento()!.politica) {
+              <div>
+                <a [routerLink]="['/politica-escalamiento', pasoEscalamiento()!.politica?.id, 'view']">{{
+                  pasoEscalamientoRef.politica?.nombre
+                }}</a>
+              </div>
+            }
+          </dd>
+          <dt><span jhiTranslate="oncallApp.pasoEscalamiento.rotacion">Rotacion</span></dt>
+          <dd>
+            @if (pasoEscalamiento()!.rotacion) {
+              <div>
+                <a [routerLink]="['/rotacion', pasoEscalamiento()!.rotacion?.id, 'view']">{{ pasoEscalamientoRef.rotacion?.nombre }}</a>
+              </div>
+            }
+          </dd>
+          <dt><span jhiTranslate="oncallApp.pasoEscalamiento.destinatarioDirecto">Destinatario Directo</span></dt>
+          <dd>
+            <span>{{ pasoEscalamientoRef.destinatarioDirecto?.login }}</span>
+          </dd>
+        </dl>
+
+        <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+          <fa-icon icon="arrow-left" />&nbsp;<span jhiTranslate="entity.action.back">Volver</span>
+        </button>
+
+        <button type="button" [routerLink]="['/paso-escalamiento', pasoEscalamientoRef.id, 'edit']" class="btn btn-primary">
+          <fa-icon icon="pencil-alt" />&nbsp;<span jhiTranslate="entity.action.edit">Editar</span>
+        </button>
+      </div>
+    }
+  </div>
+</div>

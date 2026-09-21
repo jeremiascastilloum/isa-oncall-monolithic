@@ -1,0 +1,154 @@
+<div>
+  <h2 id="page-heading" data-cy="AccionCorrectivaHeading">
+    <span jhiTranslate="oncallApp.accionCorrectiva.home.title">Accion Correctivas</span>
+
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-info me-2" (click)="load()" [disabled]="isLoading()">
+        <fa-icon icon="sync" [animation]="isLoading() ? 'spin' : undefined" />
+        <span jhiTranslate="oncallApp.accionCorrectiva.home.refreshListLabel">Refrescar lista</span>
+      </button>
+
+      <button
+        id="jh-create-entity"
+        data-cy="entityCreateButton"
+        class="btn btn-primary jh-create-entity create-accion-correctiva"
+        [routerLink]="['/accion-correctiva/new']"
+      >
+        <fa-icon icon="plus" />
+        <span jhiTranslate="oncallApp.accionCorrectiva.home.createLabel">Crear nuevo Accion Correctiva</span>
+      </button>
+    </div>
+  </h2>
+
+  <jhi-alert-error />
+
+  <jhi-alert />
+
+  @if (accionCorrectivas().length === 0) {
+    <div class="alert alert-warning" id="no-result">
+      <span jhiTranslate="oncallApp.accionCorrectiva.home.notFound">Ningún Accion Correctivas encontrado</span>
+    </div>
+  } @else {
+    <div class="table-responsive table-entities" id="entities">
+      <table class="table table-striped" aria-describedby="page-heading">
+        <thead>
+          <tr jhiSort [(sortState)]="sortState" (sortChange)="navigateToWithComponentValues($event)">
+            <th scope="col" jhiSortBy="id">
+              <div class="d-flex">
+                <span jhiTranslate="global.field.id">ID</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="descripcion">
+              <div class="d-flex">
+                <span jhiTranslate="oncallApp.accionCorrectiva.descripcion">Descripcion</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="prioridad">
+              <div class="d-flex">
+                <span jhiTranslate="oncallApp.accionCorrectiva.prioridad">Prioridad</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="estado">
+              <div class="d-flex">
+                <span jhiTranslate="oncallApp.accionCorrectiva.estado">Estado</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="fechaLimite">
+              <div class="d-flex">
+                <span jhiTranslate="oncallApp.accionCorrectiva.fechaLimite">Fecha Limite</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="ticketUrl">
+              <div class="d-flex">
+                <span jhiTranslate="oncallApp.accionCorrectiva.ticketUrl">Ticket Url</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="postmortem.titulo">
+              <div class="d-flex">
+                <span jhiTranslate="oncallApp.accionCorrectiva.postmortem">Postmortem</span>
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="responsable.login">
+              <div class="d-flex">
+                <span jhiTranslate="oncallApp.accionCorrectiva.responsable">Responsable</span>
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col"></th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (accionCorrectiva of accionCorrectivas(); track trackId(accionCorrectiva)) {
+            <tr data-cy="entityTable">
+              <td>
+                <a [routerLink]="['/accion-correctiva', accionCorrectiva.id, 'view']">{{ accionCorrectiva.id }}</a>
+              </td>
+              <td>{{ accionCorrectiva.descripcion }}</td>
+              <td [jhiTranslate]="'oncallApp.Prioridad.' + (accionCorrectiva.prioridad ?? 'null')">
+                {{ { null: '', ALTA: 'ALTA', MEDIA: 'MEDIA', BAJA: 'BAJA' }[accionCorrectiva.prioridad ?? 'null'] }}
+              </td>
+              <td [jhiTranslate]="'oncallApp.EstadoAccion.' + (accionCorrectiva.estado ?? 'null')">
+                {{
+                  { null: '', PENDIENTE: 'PENDIENTE', EN_CURSO: 'EN_CURSO', COMPLETADA: 'COMPLETADA', DESCARTADA: 'DESCARTADA' }[
+                    accionCorrectiva.estado ?? 'null'
+                  ]
+                }}
+              </td>
+              <td>{{ accionCorrectiva.fechaLimite | formatMediumDate }}</td>
+              <td>{{ accionCorrectiva.ticketUrl }}</td>
+              <td>
+                @if (accionCorrectiva.postmortem) {
+                  <div>
+                    <a [routerLink]="['/postmortem', accionCorrectiva.postmortem.id, 'view']">{{ accionCorrectiva.postmortem.titulo }}</a>
+                  </div>
+                }
+              </td>
+              <td>
+                {{ accionCorrectiva.responsable?.login }}
+              </td>
+              <td class="text-end">
+                <div class="btn-group">
+                  <a
+                    [routerLink]="['/accion-correctiva', accionCorrectiva.id, 'view']"
+                    class="btn btn-info btn-sm"
+                    data-cy="entityDetailsButton"
+                  >
+                    <fa-icon icon="eye" />
+                    <span class="d-none d-md-inline" jhiTranslate="entity.action.view">Vista</span>
+                  </a>
+
+                  <a
+                    [routerLink]="['/accion-correctiva', accionCorrectiva.id, 'edit']"
+                    class="btn btn-primary btn-sm"
+                    data-cy="entityEditButton"
+                  >
+                    <fa-icon icon="pencil-alt" />
+                    <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Editar</span>
+                  </a>
+
+                  <button type="submit" (click)="delete(accionCorrectiva)" class="btn btn-danger btn-sm" data-cy="entityDeleteButton">
+                    <fa-icon icon="times" />
+                    <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Eliminar</span>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</div>

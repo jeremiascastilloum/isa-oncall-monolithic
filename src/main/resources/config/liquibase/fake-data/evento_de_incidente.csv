@@ -1,0 +1,31 @@
+id;tipo;detalle;ocurrido_en;automatico;incidente_id
+1;CREACION;provided;2023-12-04T14:12:40;true;1
+2;ESCALAMIENTO;whoa;2023-12-04T04:08:10;true;2
+3;NOTA;though instead;2023-12-04T20:47:30;false;3
+4;CREACION;round talkative;2023-12-04T08:55:41;true;4
+5;CAMBIO_DE_ESTADO;gah;2023-12-04T07:45:53;true;5
+6;CAMBIO_DE_ESTADO;boohoo commodity;2023-12-04T05:31:49;false;6
+7;ASIGNACION;handsome um;2023-12-04T13:37:25;false;7
+8;NOTA;unhappy;2023-12-04T05:56:54;false;8
+9;CREACION;general substantiate;2023-12-04T01:10:36;true;9
+10;ESCALAMIENTO;failing who that;2023-12-04T09:27:12;false;10
+11;CAMBIO_DE_ESTADO;faithfully;2023-12-04T21:48:44;false;11
+12;RESOLUCION;debit;2023-12-04T13:18:55;false;12
+13;ESCALAMIENTO;amidst apropos woot;2023-12-04T19:18:37;true;13
+14;CREACION;interviewer geez towards;2023-12-04T20:44:58;true;14
+15;NOTA;righteously hurtful;2023-12-04T08:27:13;false;15
+16;CREACION;hm;2023-12-04T07:26:07;false;16
+17;RESOLUCION;er once;2023-12-04T01:48:15;true;17
+18;ESCALAMIENTO;simplistic towards;2023-12-04T07:03:53;true;18
+19;ASIGNACION;engender hence;2023-12-04T11:36:37;false;19
+20;RESOLUCION;righteously nerve;2023-12-04T15:22:52;false;20
+21;ESCALAMIENTO;thorough;2023-12-04T05:48:04;false;21
+22;NOTA;that;2023-12-04T02:36:12;true;22
+23;ESCALAMIENTO;ravage;2023-12-04T06:24:22;true;23
+24;CAMBIO_DE_ESTADO;poorly because;2023-12-04T18:51:58;true;24
+25;NOTA;austere obediently that;2023-12-04T02:03:09;true;25
+26;CAMBIO_DE_ESTADO;bah teriyaki;2023-12-04T17:05:29;false;26
+27;CREACION;thorn wherever wound;2023-12-04T12:04:15;true;27
+28;CREACION;near;2023-12-04T15:15:20;true;28
+29;RESOLUCION;honorable expensive vice;2023-12-04T20:31:01;false;29
+30;RESOLUCION;embossing atop;2023-12-04T04:06:16;true;30

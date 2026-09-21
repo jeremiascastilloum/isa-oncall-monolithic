@@ -1,0 +1,140 @@
+<div>
+  <h2 id="page-heading" data-cy="ObjetivoDeServicioHeading">
+    <span jhiTranslate="oncallApp.objetivoDeServicio.home.title">Objetivo De Servicios</span>
+
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-info me-2" (click)="load()" [disabled]="isLoading()">
+        <fa-icon icon="sync" [animation]="isLoading() ? 'spin' : undefined" />
+        <span jhiTranslate="oncallApp.objetivoDeServicio.home.refreshListLabel">Refrescar lista</span>
+      </button>
+
+      <button
+        id="jh-create-entity"
+        data-cy="entityCreateButton"
+        class="btn btn-primary jh-create-entity create-objetivo-de-servicio"
+        [routerLink]="['/objetivo-de-servicio/new']"
+      >
+        <fa-icon icon="plus" />
+        <span jhiTranslate="oncallApp.objetivoDeServicio.home.createLabel">Crear nuevo Objetivo De Servicio</span>
+      </button>
+    </div>
+  </h2>
+
+  <jhi-alert-error />
+
+  <jhi-alert />
+
+  @if (objetivoDeServicios().length === 0) {
+    <div class="alert alert-warning" id="no-result">
+      <span jhiTranslate="oncallApp.objetivoDeServicio.home.notFound">Ningún Objetivo De Servicios encontrado</span>
+    </div>
+  } @else {
+    <div class="table-responsive table-entities" id="entities">
+      <table class="table table-striped" aria-describedby="page-heading">
+        <thead>
+          <tr jhiSort [(sortState)]="sortState" (sortChange)="navigateToWithComponentValues($event)">
+            <th scope="col" jhiSortBy="id">
+              <div class="d-flex">
+                <span jhiTranslate="global.field.id">ID</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="tipo">
+              <div class="d-flex">
+                <span jhiTranslate="oncallApp.objetivoDeServicio.tipo">Tipo</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="severidadAplicable">
+              <div class="d-flex">
+                <span jhiTranslate="oncallApp.objetivoDeServicio.severidadAplicable">Severidad Aplicable</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="minutosObjetivo">
+              <div class="d-flex">
+                <span jhiTranslate="oncallApp.objetivoDeServicio.minutosObjetivo">Minutos Objetivo</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="descripcion">
+              <div class="d-flex">
+                <span jhiTranslate="oncallApp.objetivoDeServicio.descripcion">Descripcion</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="servicio.nombre">
+              <div class="d-flex">
+                <span jhiTranslate="oncallApp.objetivoDeServicio.servicio">Servicio</span>
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col"></th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (objetivoDeServicio of objetivoDeServicios(); track trackId(objetivoDeServicio)) {
+            <tr data-cy="entityTable">
+              <td>
+                <a [routerLink]="['/objetivo-de-servicio', objetivoDeServicio.id, 'view']">{{ objetivoDeServicio.id }}</a>
+              </td>
+              <td [jhiTranslate]="'oncallApp.TipoObjetivo.' + (objetivoDeServicio.tipo ?? 'null')">
+                {{
+                  {
+                    null: '',
+                    TIEMPO_DE_RECONOCIMIENTO: 'TIEMPO_DE_RECONOCIMIENTO',
+                    TIEMPO_DE_RESOLUCION: 'TIEMPO_DE_RESOLUCION',
+                    DISPONIBILIDAD: 'DISPONIBILIDAD',
+                  }[objetivoDeServicio.tipo ?? 'null']
+                }}
+              </td>
+              <td [jhiTranslate]="'oncallApp.Severidad.' + (objetivoDeServicio.severidadAplicable ?? 'null')">
+                {{ { null: '', SEV1: 'SEV1', SEV2: 'SEV2', SEV3: 'SEV3', SEV4: 'SEV4' }[objetivoDeServicio.severidadAplicable ?? 'null'] }}
+              </td>
+              <td>{{ objetivoDeServicio.minutosObjetivo }}</td>
+              <td>{{ objetivoDeServicio.descripcion }}</td>
+              <td>
+                @if (objetivoDeServicio.servicio) {
+                  <div>
+                    <a [routerLink]="['/servicio', objetivoDeServicio.servicio.id, 'view']">{{ objetivoDeServicio.servicio.nombre }}</a>
+                  </div>
+                }
+              </td>
+              <td class="text-end">
+                <div class="btn-group">
+                  <a
+                    [routerLink]="['/objetivo-de-servicio', objetivoDeServicio.id, 'view']"
+                    class="btn btn-info btn-sm"
+                    data-cy="entityDetailsButton"
+                  >
+                    <fa-icon icon="eye" />
+                    <span class="d-none d-md-inline" jhiTranslate="entity.action.view">Vista</span>
+                  </a>
+
+                  <a
+                    [routerLink]="['/objetivo-de-servicio', objetivoDeServicio.id, 'edit']"
+                    class="btn btn-primary btn-sm"
+                    data-cy="entityEditButton"
+                  >
+                    <fa-icon icon="pencil-alt" />
+                    <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Editar</span>
+                  </a>
+
+                  <button type="submit" (click)="delete(objetivoDeServicio)" class="btn btn-danger btn-sm" data-cy="entityDeleteButton">
+                    <fa-icon icon="times" />
+                    <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Eliminar</span>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</div>

@@ -1,0 +1,28 @@
+{
+  "oncallApp": {
+    "eventoDeIncidente": {
+      "home": {
+        "title": "Evento De Incidentes",
+        "refreshListLabel": "Refrescar lista",
+        "createLabel": "Crear nuevo Evento De Incidente",
+        "createOrEditLabel": "Crear o editar Evento De Incidente",
+        "notFound": "Ningún Evento De Incidentes encontrado"
+      },
+      "created": "Un nuevo Evento De Incidente ha sido creado con el identificador {{ param }}",
+      "updated": "Un Evento De Incidente ha sido actualizado con el identificador {{ param }}",
+      "deleted": "Un Evento De Incidente ha sido eliminado con el identificador {{ param }}",
+      "delete": {
+        "question": "¿Seguro que quiere eliminar Evento De Incidente {{ id }}?"
+      },
+      "detail": {
+        "title": "Evento De Incidente"
+      },
+      "id": "ID",
+      "tipo": "Tipo",
+      "detalle": "Detalle",
+      "ocurridoEn": "Ocurrido En",
+      "automatico": "Automatico",
+      "incidente": "Incidente"
+    }
+  }
+}

@@ -1,0 +1,151 @@
+<div>
+  <h2 id="page-heading" data-cy="PasoEscalamientoHeading">
+    <span jhiTranslate="oncallApp.pasoEscalamiento.home.title">Paso Escalamientos</span>
+
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-info me-2" (click)="load()" [disabled]="isLoading()">
+        <fa-icon icon="sync" [animation]="isLoading() ? 'spin' : undefined" />
+        <span jhiTranslate="oncallApp.pasoEscalamiento.home.refreshListLabel">Refrescar lista</span>
+      </button>
+
+      <button
+        id="jh-create-entity"
+        data-cy="entityCreateButton"
+        class="btn btn-primary jh-create-entity create-paso-escalamiento"
+        [routerLink]="['/paso-escalamiento/new']"
+      >
+        <fa-icon icon="plus" />
+        <span jhiTranslate="oncallApp.pasoEscalamiento.home.createLabel">Crear nuevo Paso Escalamiento</span>
+      </button>
+    </div>
+  </h2>
+
+  <jhi-alert-error />
+
+  <jhi-alert />
+
+  @if (pasoEscalamientos().length === 0) {
+    <div class="alert alert-warning" id="no-result">
+      <span jhiTranslate="oncallApp.pasoEscalamiento.home.notFound">Ningún Paso Escalamientos encontrado</span>
+    </div>
+  } @else {
+    <div class="table-responsive table-entities" id="entities">
+      <table class="table table-striped" aria-describedby="page-heading">
+        <thead>
+          <tr jhiSort [(sortState)]="sortState" (sortChange)="navigateToWithComponentValues($event)">
+            <th scope="col" jhiSortBy="id">
+              <div class="d-flex">
+                <span jhiTranslate="global.field.id">ID</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="orden">
+              <div class="d-flex">
+                <span jhiTranslate="oncallApp.pasoEscalamiento.orden">Orden</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="esperaMinutos">
+              <div class="d-flex">
+                <span jhiTranslate="oncallApp.pasoEscalamiento.esperaMinutos">Espera Minutos</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="canal">
+              <div class="d-flex">
+                <span jhiTranslate="oncallApp.pasoEscalamiento.canal">Canal</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="politica.nombre">
+              <div class="d-flex">
+                <span jhiTranslate="oncallApp.pasoEscalamiento.politica">Politica</span>
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="rotacion.nombre">
+              <div class="d-flex">
+                <span jhiTranslate="oncallApp.pasoEscalamiento.rotacion">Rotacion</span>
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="destinatarioDirecto.login">
+              <div class="d-flex">
+                <span jhiTranslate="oncallApp.pasoEscalamiento.destinatarioDirecto">Destinatario Directo</span>
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col"></th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (pasoEscalamiento of pasoEscalamientos(); track trackId(pasoEscalamiento)) {
+            <tr data-cy="entityTable">
+              <td>
+                <a [routerLink]="['/paso-escalamiento', pasoEscalamiento.id, 'view']">{{ pasoEscalamiento.id }}</a>
+              </td>
+              <td>{{ pasoEscalamiento.orden }}</td>
+              <td>{{ pasoEscalamiento.esperaMinutos }}</td>
+              <td [jhiTranslate]="'oncallApp.Canal.' + (pasoEscalamiento.canal ?? 'null')">
+                {{
+                  { null: '', EMAIL: 'EMAIL', SMS: 'SMS', PUSH: 'PUSH', WEBHOOK: 'WEBHOOK', LLAMADA: 'LLAMADA' }[
+                    pasoEscalamiento.canal ?? 'null'
+                  ]
+                }}
+              </td>
+              <td>
+                @if (pasoEscalamiento.politica) {
+                  <div>
+                    <a [routerLink]="['/politica-escalamiento', pasoEscalamiento.politica.id, 'view']">{{
+                      pasoEscalamiento.politica.nombre
+                    }}</a>
+                  </div>
+                }
+              </td>
+              <td>
+                @if (pasoEscalamiento.rotacion) {
+                  <div>
+                    <a [routerLink]="['/rotacion', pasoEscalamiento.rotacion.id, 'view']">{{ pasoEscalamiento.rotacion.nombre }}</a>
+                  </div>
+                }
+              </td>
+              <td>
+                {{ pasoEscalamiento.destinatarioDirecto?.login }}
+              </td>
+              <td class="text-end">
+                <div class="btn-group">
+                  <a
+                    [routerLink]="['/paso-escalamiento', pasoEscalamiento.id, 'view']"
+                    class="btn btn-info btn-sm"
+                    data-cy="entityDetailsButton"
+                  >
+                    <fa-icon icon="eye" />
+                    <span class="d-none d-md-inline" jhiTranslate="entity.action.view">Vista</span>
+                  </a>
+
+                  <a
+                    [routerLink]="['/paso-escalamiento', pasoEscalamiento.id, 'edit']"
+                    class="btn btn-primary btn-sm"
+                    data-cy="entityEditButton"
+                  >
+                    <fa-icon icon="pencil-alt" />
+                    <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Editar</span>
+                  </a>
+
+                  <button type="submit" (click)="delete(pasoEscalamiento)" class="btn btn-danger btn-sm" data-cy="entityDeleteButton">
+                    <fa-icon icon="times" />
+                    <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Eliminar</span>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</div>

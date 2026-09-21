@@ -1,0 +1,9 @@
+export enum EstadoAccion {
+  PENDIENTE = 'PENDIENTE',
+
+  EN_CURSO = 'EN_CURSO',
+
+  COMPLETADA = 'COMPLETADA',
+
+  DESCARTADA = 'DESCARTADA',
+}

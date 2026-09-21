@@ -1,0 +1,39 @@
+{
+  "oncallApp": {
+    "incidente": {
+      "home": {
+        "title": "Incidentes",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "Create a new Incidente",
+        "createOrEditLabel": "Create or edit a Incidente",
+        "notFound": "No Incidentes found"
+      },
+      "created": "A new Incidente is created with identifier {{ param }}",
+      "updated": "A Incidente is updated with identifier {{ param }}",
+      "deleted": "A Incidente is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Incidente {{ id }}?"
+      },
+      "detail": {
+        "title": "Incidente"
+      },
+      "id": "ID",
+      "titulo": "Titulo",
+      "descripcion": "Descripcion",
+      "severidad": "Severidad",
+      "estado": "Estado",
+      "detectadoEn": "Detectado En",
+      "reconocidoEn": "Reconocido En",
+      "mitigadoEn": "Mitigado En",
+      "resueltoEn": "Resuelto En",
+      "usuariosAfectados": "Usuarios Afectados",
+      "cumplioObjetivo": "Cumplio Objetivo",
+      "comandante": "Comandante",
+      "servicio": "Servicio",
+      "postmortem": "Postmortem",
+      "alerta": "Alerta",
+      "evento": "Evento",
+      "notificacion": "Notificacion"
+    }
+  }
+}

@@ -1,0 +1,7 @@
+export enum Entorno {
+  PRODUCCION = 'PRODUCCION',
+
+  STAGING = 'STAGING',
+
+  DESARROLLO = 'DESARROLLO',
+}

@@ -1,0 +1,12 @@
+{
+  "oncallApp": {
+    "EstadoNotificacion": {
+      "null": "",
+      "PENDIENTE": "PENDIENTE",
+      "ENVIADA": "ENVIADA",
+      "ENTREGADA": "ENTREGADA",
+      "FALLIDA": "FALLIDA",
+      "RECONOCIDA": "RECONOCIDA"
+    }
+  }
+}

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd
+                        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+    <!--
+        Added the constraints for entity Incidente.
+    -->
+    <changeSet id="20231204223723-2" author="jhipster">
+
+        <addForeignKeyConstraint baseColumnNames="comandante_id"
+                                 baseTableName="incidente"
+                                 constraintName="fk_incidente__comandante_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="jhi_user"
+                                 />
+
+        <addForeignKeyConstraint baseColumnNames="incidente_id"
+                                 baseTableName="rel_incidente__servicio"
+                                 constraintName="fk_rel_incidente__servicio__incidente_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="incidente"
+                                 />
+
+        <addForeignKeyConstraint baseColumnNames="servicio_id"
+                                 baseTableName="rel_incidente__servicio"
+                                 constraintName="fk_rel_incidente__servicio__servicio_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="servicio"
+                                 />
+    </changeSet>
+</databaseChangeLog>

@@ -1,0 +1,32 @@
+{
+  "oncallApp": {
+    "postmortem": {
+      "home": {
+        "title": "Postmortems",
+        "refreshListLabel": "Refrescar lista",
+        "createLabel": "Crear nuevo Postmortem",
+        "createOrEditLabel": "Crear o editar Postmortem",
+        "notFound": "Ningún Postmortems encontrado"
+      },
+      "created": "Un nuevo Postmortem ha sido creado con el identificador {{ param }}",
+      "updated": "Un Postmortem ha sido actualizado con el identificador {{ param }}",
+      "deleted": "Un Postmortem ha sido eliminado con el identificador {{ param }}",
+      "delete": {
+        "question": "¿Seguro que quiere eliminar Postmortem {{ id }}?"
+      },
+      "detail": {
+        "title": "Postmortem"
+      },
+      "id": "ID",
+      "titulo": "Titulo",
+      "resumen": "Resumen",
+      "causaRaiz": "Causa Raiz",
+      "lineaDeTiempo": "Linea De Tiempo",
+      "leccionesAprendidas": "Lecciones Aprendidas",
+      "publicado": "Publicado",
+      "publicadoEn": "Publicado En",
+      "incidente": "Incidente",
+      "accion": "Accion"
+    }
+  }
+}

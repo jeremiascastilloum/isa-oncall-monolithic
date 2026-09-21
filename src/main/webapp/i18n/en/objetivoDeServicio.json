@@ -1,0 +1,28 @@
+{
+  "oncallApp": {
+    "objetivoDeServicio": {
+      "home": {
+        "title": "Objetivo De Servicios",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "Create a new Objetivo De Servicio",
+        "createOrEditLabel": "Create or edit a Objetivo De Servicio",
+        "notFound": "No Objetivo De Servicios found"
+      },
+      "created": "A new Objetivo De Servicio is created with identifier {{ param }}",
+      "updated": "A Objetivo De Servicio is updated with identifier {{ param }}",
+      "deleted": "A Objetivo De Servicio is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Objetivo De Servicio {{ id }}?"
+      },
+      "detail": {
+        "title": "Objetivo De Servicio"
+      },
+      "id": "ID",
+      "tipo": "Tipo",
+      "severidadAplicable": "Severidad Aplicable",
+      "minutosObjetivo": "Minutos Objetivo",
+      "descripcion": "Descripcion",
+      "servicio": "Servicio"
+    }
+  }
+}

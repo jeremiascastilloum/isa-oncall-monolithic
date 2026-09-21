@@ -1,0 +1,79 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    @if (alerta(); as alertaRef) {
+      <div>
+        <h2 data-cy="alertaDetailsHeading"><span jhiTranslate="oncallApp.alerta.detail.title">Alerta</span></h2>
+
+        <hr />
+
+        <jhi-alert-error />
+
+        <jhi-alert />
+
+        <dl class="row-md jh-entity-details">
+          <dt><span jhiTranslate="global.field.id">ID</span></dt>
+          <dd>
+            <span>{{ alertaRef.id }}</span>
+          </dd>
+          <dt><span jhiTranslate="oncallApp.alerta.fingerprint">Fingerprint</span></dt>
+          <dd>
+            <span>{{ alertaRef.fingerprint }}</span>
+          </dd>
+          <dt><span jhiTranslate="oncallApp.alerta.origen">Origen</span></dt>
+          <dd>
+            <span [jhiTranslate]="'oncallApp.OrigenAlerta.' + (alertaRef.origen ?? 'null')">{{
+              {
+                null: '',
+                PROMETHEUS: 'PROMETHEUS',
+                DATADOG: 'DATADOG',
+                CLOUDWATCH: 'CLOUDWATCH',
+                HEALTHCHECK: 'HEALTHCHECK',
+                MANUAL: 'MANUAL',
+              }[alertaRef.origen ?? 'null']
+            }}</span>
+          </dd>
+          <dt><span jhiTranslate="oncallApp.alerta.resumen">Resumen</span></dt>
+          <dd>
+            <span>{{ alertaRef.resumen }}</span>
+          </dd>
+          <dt><span jhiTranslate="oncallApp.alerta.payload">Payload</span></dt>
+          <dd>
+            <span>{{ alertaRef.payload }}</span>
+          </dd>
+          <dt><span jhiTranslate="oncallApp.alerta.recibidaEn">Recibida En</span></dt>
+          <dd>
+            <span>{{ alertaRef.recibidaEn | formatMediumDatetime }}</span>
+          </dd>
+          <dt><span jhiTranslate="oncallApp.alerta.procesada">Procesada</span></dt>
+          <dd>
+            <span>{{ alertaRef.procesada }}</span>
+          </dd>
+          <dt><span jhiTranslate="oncallApp.alerta.servicio">Servicio</span></dt>
+          <dd>
+            @if (alerta()!.servicio) {
+              <div>
+                <a [routerLink]="['/servicio', alerta()!.servicio?.id, 'view']">{{ alertaRef.servicio?.nombre }}</a>
+              </div>
+            }
+          </dd>
+          <dt><span jhiTranslate="oncallApp.alerta.incidente">Incidente</span></dt>
+          <dd>
+            @if (alerta()!.incidente) {
+              <div>
+                <a [routerLink]="['/incidente', alerta()!.incidente?.id, 'view']">{{ alertaRef.incidente?.titulo }}</a>
+              </div>
+            }
+          </dd>
+        </dl>
+
+        <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+          <fa-icon icon="arrow-left" />&nbsp;<span jhiTranslate="entity.action.back">Volver</span>
+        </button>
+
+        <button type="button" [routerLink]="['/alerta', alertaRef.id, 'edit']" class="btn btn-primary">
+          <fa-icon icon="pencil-alt" />&nbsp;<span jhiTranslate="entity.action.edit">Editar</span>
+        </button>
+      </div>
+    }
+  </div>
+</div>

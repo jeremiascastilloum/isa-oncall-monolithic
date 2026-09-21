@@ -1,0 +1,11 @@
+export enum OrigenAlerta {
+  PROMETHEUS = 'PROMETHEUS',
+
+  DATADOG = 'DATADOG',
+
+  CLOUDWATCH = 'CLOUDWATCH',
+
+  HEALTHCHECK = 'HEALTHCHECK',
+
+  MANUAL = 'MANUAL',
+}

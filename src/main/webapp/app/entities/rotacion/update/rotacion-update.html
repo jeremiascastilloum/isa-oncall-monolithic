@@ -1,0 +1,136 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    <form name="editForm" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+      <h2 id="jhi-rotacion-heading" data-cy="RotacionCreateUpdateHeading" jhiTranslate="oncallApp.rotacion.home.createOrEditLabel">
+        Crear o editar Rotacion
+      </h2>
+
+      <div>
+        <jhi-alert-error />
+
+        @if (editForm.controls.id.value !== null) {
+          <div class="mb-3">
+            <label class="form-label" for="field_id" jhiTranslate="global.field.id">ID</label>
+            <input type="number" class="form-control" name="id" id="field_id" data-cy="id" formControlName="id" [readonly]="true" />
+          </div>
+        }
+
+        @let nombreRef = editForm.get('nombre')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_nombre" jhiTranslate="oncallApp.rotacion.nombre">Nombre</label>
+          <input type="text" class="form-control" name="nombre" id="field_nombre" data-cy="nombre" formControlName="nombre" />
+          @if (nombreRef.invalid && (nombreRef.dirty || nombreRef.touched)) {
+            <div>
+              @if (nombreRef.errors?.required) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.required">Este campo es obligatorio.</small>
+              }
+              @if (nombreRef.errors?.maxlength) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.maxlength" [translateValues]="{ max: '60' }"
+                  >Este campo no puede superar más de 60 caracteres.</small
+                >
+              }
+            </div>
+          }
+        </div>
+
+        @let tipoRef = editForm.get('tipo')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_tipo" jhiTranslate="oncallApp.rotacion.tipo">Tipo</label>
+          <select class="form-control" name="tipo" formControlName="tipo" id="field_tipo" data-cy="tipo">
+            <option [ngValue]="null">{{ 'oncallApp.TipoRotacion.null' | translate }}</option>
+            @for (tipoRotacion of tipoRotacionValues; track $index) {
+              <option [value]="tipoRotacion">{{ 'oncallApp.TipoRotacion.' + tipoRotacion | translate }}</option>
+            }
+          </select>
+          @if (tipoRef.invalid && (tipoRef.dirty || tipoRef.touched)) {
+            <div>
+              @if (tipoRef.errors?.required) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.required">Este campo es obligatorio.</small>
+              }
+            </div>
+          }
+        </div>
+
+        @let zonaHorariaRef = editForm.get('zonaHoraria')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_zonaHoraria" jhiTranslate="oncallApp.rotacion.zonaHoraria">Zona Horaria</label>
+          <input
+            type="text"
+            class="form-control"
+            name="zonaHoraria"
+            id="field_zonaHoraria"
+            data-cy="zonaHoraria"
+            formControlName="zonaHoraria"
+          />
+          @if (zonaHorariaRef.invalid && (zonaHorariaRef.dirty || zonaHorariaRef.touched)) {
+            <div>
+              @if (zonaHorariaRef.errors?.required) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.required">Este campo es obligatorio.</small>
+              }
+              @if (zonaHorariaRef.errors?.maxlength) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.maxlength" [translateValues]="{ max: '50' }"
+                  >Este campo no puede superar más de 50 caracteres.</small
+                >
+              }
+            </div>
+          }
+        </div>
+
+        @let activaRef = editForm.get('activa')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_activa" jhiTranslate="oncallApp.rotacion.activa">Activa</label>
+          <input type="checkbox" class="form-check" name="activa" id="field_activa" data-cy="activa" formControlName="activa" />
+          @if (activaRef.invalid && (activaRef.dirty || activaRef.touched)) {
+            <div>
+              @if (activaRef.errors?.required) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.required">Este campo es obligatorio.</small>
+              }
+            </div>
+          }
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="field_equipo" jhiTranslate="oncallApp.rotacion.equipo">Equipo</label>
+          <select
+            class="form-control"
+            id="field_equipo"
+            data-cy="equipo"
+            name="equipo"
+            formControlName="equipo"
+            [compareWith]="compareEquipo"
+          >
+            @if (editForm.get(['equipo'])!.value === null) {
+              <option [ngValue]="null" selected></option>
+            }
+            @for (equipoOption of equiposSharedCollection(); track $index) {
+              <option [ngValue]="equipoOption">{{ equipoOption.nombre }}</option>
+            }
+          </select>
+        </div>
+        @if (editForm.get(['equipo'])!.invalid && (editForm.get(['equipo'])!.dirty || editForm.get(['equipo'])!.touched)) {
+          <div>
+            @if (editForm.get(['equipo'])?.errors?.required) {
+              <small class="form-text text-danger" jhiTranslate="entity.validation.required">Este campo es obligatorio.</small>
+            }
+          </div>
+        }
+      </div>
+
+      <div>
+        <button type="button" id="cancel-save" data-cy="entityCreateCancelButton" class="btn btn-secondary" (click)="previousState()">
+          <fa-icon icon="ban" />&nbsp;<span jhiTranslate="entity.action.cancel">Cancelar</span>
+        </button>
+
+        <button
+          type="submit"
+          id="save-entity"
+          data-cy="entityCreateSaveButton"
+          [disabled]="editForm.invalid || isSaving()"
+          class="btn btn-primary"
+        >
+          <fa-icon icon="save" />&nbsp;<span jhiTranslate="entity.action.save">Guardar</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

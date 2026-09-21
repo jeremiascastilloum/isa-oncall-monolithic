@@ -1,0 +1,11 @@
+{
+  "oncallApp": {
+    "EstadoAccion": {
+      "null": "",
+      "PENDIENTE": "PENDIENTE",
+      "EN_CURSO": "EN_CURSO",
+      "COMPLETADA": "COMPLETADA",
+      "DESCARTADA": "DESCARTADA"
+    }
+  }
+}

@@ -1,0 +1,75 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    @if (servicio(); as servicioRef) {
+      <div>
+        <h2 data-cy="servicioDetailsHeading"><span jhiTranslate="oncallApp.servicio.detail.title">Servicio</span></h2>
+
+        <hr />
+
+        <jhi-alert-error />
+
+        <jhi-alert />
+
+        <dl class="row-md jh-entity-details">
+          <dt><span jhiTranslate="global.field.id">ID</span></dt>
+          <dd>
+            <span>{{ servicioRef.id }}</span>
+          </dd>
+          <dt><span jhiTranslate="oncallApp.servicio.nombre">Nombre</span></dt>
+          <dd>
+            <span>{{ servicioRef.nombre }}</span>
+          </dd>
+          <dt><span jhiTranslate="oncallApp.servicio.descripcion">Descripcion</span></dt>
+          <dd>
+            <span>{{ servicioRef.descripcion }}</span>
+          </dd>
+          <dt><span jhiTranslate="oncallApp.servicio.criticidad">Criticidad</span></dt>
+          <dd>
+            <span [jhiTranslate]="'oncallApp.Criticidad.' + (servicioRef.criticidad ?? 'null')">{{
+              { null: '', TIER1: 'TIER1', TIER2: 'TIER2', TIER3: 'TIER3' }[servicioRef.criticidad ?? 'null']
+            }}</span>
+          </dd>
+          <dt><span jhiTranslate="oncallApp.servicio.entorno">Entorno</span></dt>
+          <dd>
+            <span [jhiTranslate]="'oncallApp.Entorno.' + (servicioRef.entorno ?? 'null')">{{
+              { null: '', PRODUCCION: 'PRODUCCION', STAGING: 'STAGING', DESARROLLO: 'DESARROLLO' }[servicioRef.entorno ?? 'null']
+            }}</span>
+          </dd>
+          <dt><span jhiTranslate="oncallApp.servicio.repositorioUrl">Repositorio Url</span></dt>
+          <dd>
+            <span>{{ servicioRef.repositorioUrl }}</span>
+          </dd>
+          <dt><span jhiTranslate="oncallApp.servicio.activo">Activo</span></dt>
+          <dd>
+            <span>{{ servicioRef.activo }}</span>
+          </dd>
+          <dt><span jhiTranslate="oncallApp.servicio.equipo">Equipo</span></dt>
+          <dd>
+            @if (servicio()!.equipo) {
+              <div>
+                <a [routerLink]="['/equipo', servicio()!.equipo?.id, 'view']">{{ servicioRef.equipo?.nombre }}</a>
+              </div>
+            }
+          </dd>
+          <dt><span jhiTranslate="oncallApp.servicio.incidente">Incidente</span></dt>
+          <dd>
+            @for (incidente of servicioRef.incidentes; track $index; let last = $last) {
+              <span>
+                <a [routerLink]="['/incidente', incidente.id, 'view']">{{ incidente?.id }}</a
+                >{{ last ? '' : ', ' }}
+              </span>
+            }
+          </dd>
+        </dl>
+
+        <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+          <fa-icon icon="arrow-left" />&nbsp;<span jhiTranslate="entity.action.back">Volver</span>
+        </button>
+
+        <button type="button" [routerLink]="['/servicio', servicioRef.id, 'edit']" class="btn btn-primary">
+          <fa-icon icon="pencil-alt" />&nbsp;<span jhiTranslate="entity.action.edit">Editar</span>
+        </button>
+      </div>
+    }
+  </div>
+</div>

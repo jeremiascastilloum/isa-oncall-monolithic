@@ -1,0 +1,29 @@
+{
+  "oncallApp": {
+    "turnoDeGuardia": {
+      "home": {
+        "title": "Turno De Guardias",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "Create a new Turno De Guardia",
+        "createOrEditLabel": "Create or edit a Turno De Guardia",
+        "notFound": "No Turno De Guardias found"
+      },
+      "created": "A new Turno De Guardia is created with identifier {{ param }}",
+      "updated": "A Turno De Guardia is updated with identifier {{ param }}",
+      "deleted": "A Turno De Guardia is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Turno De Guardia {{ id }}?"
+      },
+      "detail": {
+        "title": "Turno De Guardia"
+      },
+      "id": "ID",
+      "desde": "Desde",
+      "hasta": "Hasta",
+      "esReemplazo": "Es Reemplazo",
+      "nota": "Nota",
+      "rotacion": "Rotacion",
+      "responsable": "Responsable"
+    }
+  }
+}

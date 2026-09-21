@@ -1,0 +1,190 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    <form name="editForm" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+      <h2 id="jhi-postmortem-heading" data-cy="PostmortemCreateUpdateHeading" jhiTranslate="oncallApp.postmortem.home.createOrEditLabel">
+        Crear o editar Postmortem
+      </h2>
+
+      <div>
+        <jhi-alert-error />
+
+        @if (editForm.controls.id.value !== null) {
+          <div class="mb-3">
+            <label class="form-label" for="field_id" jhiTranslate="global.field.id">ID</label>
+            <input type="number" class="form-control" name="id" id="field_id" data-cy="id" formControlName="id" [readonly]="true" />
+          </div>
+        }
+
+        @let tituloRef = editForm.get('titulo')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_titulo" jhiTranslate="oncallApp.postmortem.titulo">Titulo</label>
+          <input type="text" class="form-control" name="titulo" id="field_titulo" data-cy="titulo" formControlName="titulo" />
+          @if (tituloRef.invalid && (tituloRef.dirty || tituloRef.touched)) {
+            <div>
+              @if (tituloRef.errors?.required) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.required">Este campo es obligatorio.</small>
+              }
+              @if (tituloRef.errors?.maxlength) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.maxlength" [translateValues]="{ max: '140' }"
+                  >Este campo no puede superar más de 140 caracteres.</small
+                >
+              }
+            </div>
+          }
+        </div>
+
+        @let resumenRef = editForm.get('resumen')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_resumen" jhiTranslate="oncallApp.postmortem.resumen">Resumen</label>
+          <input type="text" class="form-control" name="resumen" id="field_resumen" data-cy="resumen" formControlName="resumen" />
+          @if (resumenRef.invalid && (resumenRef.dirty || resumenRef.touched)) {
+            <div>
+              @if (resumenRef.errors?.required) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.required">Este campo es obligatorio.</small>
+              }
+              @if (resumenRef.errors?.maxlength) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.maxlength" [translateValues]="{ max: '500' }"
+                  >Este campo no puede superar más de 500 caracteres.</small
+                >
+              }
+            </div>
+          }
+        </div>
+
+        @let causaRaizRef = editForm.get('causaRaiz')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_causaRaiz" jhiTranslate="oncallApp.postmortem.causaRaiz">Causa Raiz</label>
+          <input type="text" class="form-control" name="causaRaiz" id="field_causaRaiz" data-cy="causaRaiz" formControlName="causaRaiz" />
+          @if (causaRaizRef.invalid && (causaRaizRef.dirty || causaRaizRef.touched)) {
+            <div>
+              @if (causaRaizRef.errors?.required) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.required">Este campo es obligatorio.</small>
+              }
+              @if (causaRaizRef.errors?.maxlength) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.maxlength" [translateValues]="{ max: '2000' }"
+                  >Este campo no puede superar más de 2000 caracteres.</small
+                >
+              }
+            </div>
+          }
+        </div>
+
+        @let lineaDeTiempoRef = editForm.get('lineaDeTiempo')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_lineaDeTiempo" jhiTranslate="oncallApp.postmortem.lineaDeTiempo">Linea De Tiempo</label>
+          <input
+            type="text"
+            class="form-control"
+            name="lineaDeTiempo"
+            id="field_lineaDeTiempo"
+            data-cy="lineaDeTiempo"
+            formControlName="lineaDeTiempo"
+          />
+          @if (lineaDeTiempoRef.invalid && (lineaDeTiempoRef.dirty || lineaDeTiempoRef.touched)) {
+            <div>
+              @if (lineaDeTiempoRef.errors?.maxlength) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.maxlength" [translateValues]="{ max: '4000' }"
+                  >Este campo no puede superar más de 4000 caracteres.</small
+                >
+              }
+            </div>
+          }
+        </div>
+
+        @let leccionesAprendidasRef = editForm.get('leccionesAprendidas')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_leccionesAprendidas" jhiTranslate="oncallApp.postmortem.leccionesAprendidas"
+            >Lecciones Aprendidas</label
+          >
+          <input
+            type="text"
+            class="form-control"
+            name="leccionesAprendidas"
+            id="field_leccionesAprendidas"
+            data-cy="leccionesAprendidas"
+            formControlName="leccionesAprendidas"
+          />
+          @if (leccionesAprendidasRef.invalid && (leccionesAprendidasRef.dirty || leccionesAprendidasRef.touched)) {
+            <div>
+              @if (leccionesAprendidasRef.errors?.maxlength) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.maxlength" [translateValues]="{ max: '2000' }"
+                  >Este campo no puede superar más de 2000 caracteres.</small
+                >
+              }
+            </div>
+          }
+        </div>
+
+        @let publicadoRef = editForm.get('publicado')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_publicado" jhiTranslate="oncallApp.postmortem.publicado">Publicado</label>
+          <input type="checkbox" class="form-check" name="publicado" id="field_publicado" data-cy="publicado" formControlName="publicado" />
+          @if (publicadoRef.invalid && (publicadoRef.dirty || publicadoRef.touched)) {
+            <div>
+              @if (publicadoRef.errors?.required) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.required">Este campo es obligatorio.</small>
+              }
+            </div>
+          }
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="field_publicadoEn" jhiTranslate="oncallApp.postmortem.publicadoEn">Publicado En</label>
+          <div class="d-flex">
+            <input
+              id="field_publicadoEn"
+              data-cy="publicadoEn"
+              type="datetime-local"
+              class="form-control"
+              name="publicadoEn"
+              formControlName="publicadoEn"
+              placeholder="YYYY-MM-DD HH:mm"
+            />
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="field_incidente" jhiTranslate="oncallApp.postmortem.incidente">Incidente</label>
+          <select
+            class="form-control"
+            id="field_incidente"
+            data-cy="incidente"
+            name="incidente"
+            formControlName="incidente"
+            [compareWith]="compareIncidente"
+          >
+            @if (editForm.get(['incidente'])!.value === null) {
+              <option [ngValue]="null" selected></option>
+            }
+            @for (incidenteOption of incidentesCollection(); track $index) {
+              <option [ngValue]="incidenteOption">{{ incidenteOption.titulo }}</option>
+            }
+          </select>
+        </div>
+        @if (editForm.get(['incidente'])!.invalid && (editForm.get(['incidente'])!.dirty || editForm.get(['incidente'])!.touched)) {
+          <div>
+            @if (editForm.get(['incidente'])?.errors?.required) {
+              <small class="form-text text-danger" jhiTranslate="entity.validation.required">Este campo es obligatorio.</small>
+            }
+          </div>
+        }
+      </div>
+
+      <div>
+        <button type="button" id="cancel-save" data-cy="entityCreateCancelButton" class="btn btn-secondary" (click)="previousState()">
+          <fa-icon icon="ban" />&nbsp;<span jhiTranslate="entity.action.cancel">Cancelar</span>
+        </button>
+
+        <button
+          type="submit"
+          id="save-entity"
+          data-cy="entityCreateSaveButton"
+          [disabled]="editForm.invalid || isSaving()"
+          class="btn btn-primary"
+        >
+          <fa-icon icon="save" />&nbsp;<span jhiTranslate="entity.action.save">Guardar</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

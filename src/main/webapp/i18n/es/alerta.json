@@ -1,0 +1,31 @@
+{
+  "oncallApp": {
+    "alerta": {
+      "home": {
+        "title": "Alertas",
+        "refreshListLabel": "Refrescar lista",
+        "createLabel": "Crear nuevo Alerta",
+        "createOrEditLabel": "Crear o editar Alerta",
+        "notFound": "Ningún Alertas encontrado"
+      },
+      "created": "Un nuevo Alerta ha sido creado con el identificador {{ param }}",
+      "updated": "Un Alerta ha sido actualizado con el identificador {{ param }}",
+      "deleted": "Un Alerta ha sido eliminado con el identificador {{ param }}",
+      "delete": {
+        "question": "¿Seguro que quiere eliminar Alerta {{ id }}?"
+      },
+      "detail": {
+        "title": "Alerta"
+      },
+      "id": "ID",
+      "fingerprint": "Fingerprint",
+      "origen": "Origen",
+      "resumen": "Resumen",
+      "payload": "Payload",
+      "recibidaEn": "Recibida En",
+      "procesada": "Procesada",
+      "servicio": "Servicio",
+      "incidente": "Incidente"
+    }
+  }
+}

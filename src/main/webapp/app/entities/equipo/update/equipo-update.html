@@ -1,0 +1,94 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    <form name="editForm" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+      <h2 id="jhi-equipo-heading" data-cy="EquipoCreateUpdateHeading" jhiTranslate="oncallApp.equipo.home.createOrEditLabel">
+        Crear o editar Equipo
+      </h2>
+
+      <div>
+        <jhi-alert-error />
+
+        @if (editForm.controls.id.value !== null) {
+          <div class="mb-3">
+            <label class="form-label" for="field_id" jhiTranslate="global.field.id">ID</label>
+            <input type="number" class="form-control" name="id" id="field_id" data-cy="id" formControlName="id" [readonly]="true" />
+          </div>
+        }
+
+        @let nombreRef = editForm.get('nombre')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_nombre" jhiTranslate="oncallApp.equipo.nombre">Nombre</label>
+          <input type="text" class="form-control" name="nombre" id="field_nombre" data-cy="nombre" formControlName="nombre" />
+          @if (nombreRef.invalid && (nombreRef.dirty || nombreRef.touched)) {
+            <div>
+              @if (nombreRef.errors?.required) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.required">Este campo es obligatorio.</small>
+              }
+              @if (nombreRef.errors?.maxlength) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.maxlength" [translateValues]="{ max: '50' }"
+                  >Este campo no puede superar más de 50 caracteres.</small
+                >
+              }
+            </div>
+          }
+        </div>
+
+        @let emailContactoRef = editForm.get('emailContacto')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_emailContacto" jhiTranslate="oncallApp.equipo.emailContacto">Email Contacto</label>
+          <input
+            type="text"
+            class="form-control"
+            name="emailContacto"
+            id="field_emailContacto"
+            data-cy="emailContacto"
+            formControlName="emailContacto"
+          />
+          @if (emailContactoRef.invalid && (emailContactoRef.dirty || emailContactoRef.touched)) {
+            <div>
+              @if (emailContactoRef.errors?.required) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.required">Este campo es obligatorio.</small>
+              }
+              @if (emailContactoRef.errors?.maxlength) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.maxlength" [translateValues]="{ max: '120' }"
+                  >Este campo no puede superar más de 120 caracteres.</small
+                >
+              }
+            </div>
+          }
+        </div>
+
+        @let canalChatRef = editForm.get('canalChat')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_canalChat" jhiTranslate="oncallApp.equipo.canalChat">Canal Chat</label>
+          <input type="text" class="form-control" name="canalChat" id="field_canalChat" data-cy="canalChat" formControlName="canalChat" />
+          @if (canalChatRef.invalid && (canalChatRef.dirty || canalChatRef.touched)) {
+            <div>
+              @if (canalChatRef.errors?.maxlength) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.maxlength" [translateValues]="{ max: '60' }"
+                  >Este campo no puede superar más de 60 caracteres.</small
+                >
+              }
+            </div>
+          }
+        </div>
+      </div>
+
+      <div>
+        <button type="button" id="cancel-save" data-cy="entityCreateCancelButton" class="btn btn-secondary" (click)="previousState()">
+          <fa-icon icon="ban" />&nbsp;<span jhiTranslate="entity.action.cancel">Cancelar</span>
+        </button>
+
+        <button
+          type="submit"
+          id="save-entity"
+          data-cy="entityCreateSaveButton"
+          [disabled]="editForm.invalid || isSaving()"
+          class="btn btn-primary"
+        >
+          <fa-icon icon="save" />&nbsp;<span jhiTranslate="entity.action.save">Guardar</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

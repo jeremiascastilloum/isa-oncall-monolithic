@@ -1,0 +1,72 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    @if (accionCorrectiva(); as accionCorrectivaRef) {
+      <div>
+        <h2 data-cy="accionCorrectivaDetailsHeading">
+          <span jhiTranslate="oncallApp.accionCorrectiva.detail.title">Accion Correctiva</span>
+        </h2>
+
+        <hr />
+
+        <jhi-alert-error />
+
+        <jhi-alert />
+
+        <dl class="row-md jh-entity-details">
+          <dt><span jhiTranslate="global.field.id">ID</span></dt>
+          <dd>
+            <span>{{ accionCorrectivaRef.id }}</span>
+          </dd>
+          <dt><span jhiTranslate="oncallApp.accionCorrectiva.descripcion">Descripcion</span></dt>
+          <dd>
+            <span>{{ accionCorrectivaRef.descripcion }}</span>
+          </dd>
+          <dt><span jhiTranslate="oncallApp.accionCorrectiva.prioridad">Prioridad</span></dt>
+          <dd>
+            <span [jhiTranslate]="'oncallApp.Prioridad.' + (accionCorrectivaRef.prioridad ?? 'null')">{{
+              { null: '', ALTA: 'ALTA', MEDIA: 'MEDIA', BAJA: 'BAJA' }[accionCorrectivaRef.prioridad ?? 'null']
+            }}</span>
+          </dd>
+          <dt><span jhiTranslate="oncallApp.accionCorrectiva.estado">Estado</span></dt>
+          <dd>
+            <span [jhiTranslate]="'oncallApp.EstadoAccion.' + (accionCorrectivaRef.estado ?? 'null')">{{
+              { null: '', PENDIENTE: 'PENDIENTE', EN_CURSO: 'EN_CURSO', COMPLETADA: 'COMPLETADA', DESCARTADA: 'DESCARTADA' }[
+                accionCorrectivaRef.estado ?? 'null'
+              ]
+            }}</span>
+          </dd>
+          <dt><span jhiTranslate="oncallApp.accionCorrectiva.fechaLimite">Fecha Limite</span></dt>
+          <dd>
+            <span>{{ accionCorrectivaRef.fechaLimite | formatMediumDate }}</span>
+          </dd>
+          <dt><span jhiTranslate="oncallApp.accionCorrectiva.ticketUrl">Ticket Url</span></dt>
+          <dd>
+            <span>{{ accionCorrectivaRef.ticketUrl }}</span>
+          </dd>
+          <dt><span jhiTranslate="oncallApp.accionCorrectiva.postmortem">Postmortem</span></dt>
+          <dd>
+            @if (accionCorrectiva()!.postmortem) {
+              <div>
+                <a [routerLink]="['/postmortem', accionCorrectiva()!.postmortem?.id, 'view']">{{
+                  accionCorrectivaRef.postmortem?.titulo
+                }}</a>
+              </div>
+            }
+          </dd>
+          <dt><span jhiTranslate="oncallApp.accionCorrectiva.responsable">Responsable</span></dt>
+          <dd>
+            <span>{{ accionCorrectivaRef.responsable?.login }}</span>
+          </dd>
+        </dl>
+
+        <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+          <fa-icon icon="arrow-left" />&nbsp;<span jhiTranslate="entity.action.back">Volver</span>
+        </button>
+
+        <button type="button" [routerLink]="['/accion-correctiva', accionCorrectivaRef.id, 'edit']" class="btn btn-primary">
+          <fa-icon icon="pencil-alt" />&nbsp;<span jhiTranslate="entity.action.edit">Editar</span>
+        </button>
+      </div>
+    }
+  </div>
+</div>

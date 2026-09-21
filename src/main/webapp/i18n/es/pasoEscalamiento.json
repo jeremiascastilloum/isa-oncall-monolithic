@@ -1,0 +1,29 @@
+{
+  "oncallApp": {
+    "pasoEscalamiento": {
+      "home": {
+        "title": "Paso Escalamientos",
+        "refreshListLabel": "Refrescar lista",
+        "createLabel": "Crear nuevo Paso Escalamiento",
+        "createOrEditLabel": "Crear o editar Paso Escalamiento",
+        "notFound": "Ningún Paso Escalamientos encontrado"
+      },
+      "created": "Un nuevo Paso Escalamiento ha sido creado con el identificador {{ param }}",
+      "updated": "Un Paso Escalamiento ha sido actualizado con el identificador {{ param }}",
+      "deleted": "Un Paso Escalamiento ha sido eliminado con el identificador {{ param }}",
+      "delete": {
+        "question": "¿Seguro que quiere eliminar Paso Escalamiento {{ id }}?"
+      },
+      "detail": {
+        "title": "Paso Escalamiento"
+      },
+      "id": "ID",
+      "orden": "Orden",
+      "esperaMinutos": "Espera Minutos",
+      "canal": "Canal",
+      "politica": "Politica",
+      "rotacion": "Rotacion",
+      "destinatarioDirecto": "Destinatario Directo"
+    }
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "oncallApp": {
+    "TipoRotacion": {
+      "null": "",
+      "DIARIA": "DIARIA",
+      "SEMANAL": "SEMANAL",
+      "PERSONALIZADA": "PERSONALIZADA"
+    }
+  }
+}

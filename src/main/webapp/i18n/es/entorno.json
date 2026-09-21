@@ -1,0 +1,10 @@
+{
+  "oncallApp": {
+    "Entorno": {
+      "null": "",
+      "PRODUCCION": "PRODUCCION",
+      "STAGING": "STAGING",
+      "DESARROLLO": "DESARROLLO"
+    }
+  }
+}

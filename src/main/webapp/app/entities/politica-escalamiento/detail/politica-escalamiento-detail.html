@@ -1,0 +1,54 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    @if (politicaEscalamiento(); as politicaEscalamientoRef) {
+      <div>
+        <h2 data-cy="politicaEscalamientoDetailsHeading">
+          <span jhiTranslate="oncallApp.politicaEscalamiento.detail.title">Politica Escalamiento</span>
+        </h2>
+
+        <hr />
+
+        <jhi-alert-error />
+
+        <jhi-alert />
+
+        <dl class="row-md jh-entity-details">
+          <dt><span jhiTranslate="global.field.id">ID</span></dt>
+          <dd>
+            <span>{{ politicaEscalamientoRef.id }}</span>
+          </dd>
+          <dt><span jhiTranslate="oncallApp.politicaEscalamiento.nombre">Nombre</span></dt>
+          <dd>
+            <span>{{ politicaEscalamientoRef.nombre }}</span>
+          </dd>
+          <dt><span jhiTranslate="oncallApp.politicaEscalamiento.descripcion">Descripcion</span></dt>
+          <dd>
+            <span>{{ politicaEscalamientoRef.descripcion }}</span>
+          </dd>
+          <dt><span jhiTranslate="oncallApp.politicaEscalamiento.repetirVeces">Repetir Veces</span></dt>
+          <dd>
+            <span>{{ politicaEscalamientoRef.repetirVeces }}</span>
+          </dd>
+          <dt><span jhiTranslate="oncallApp.politicaEscalamiento.servicio">Servicio</span></dt>
+          <dd>
+            @if (politicaEscalamiento()!.servicio) {
+              <div>
+                <a [routerLink]="['/servicio', politicaEscalamiento()!.servicio?.id, 'view']">{{
+                  politicaEscalamientoRef.servicio?.nombre
+                }}</a>
+              </div>
+            }
+          </dd>
+        </dl>
+
+        <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+          <fa-icon icon="arrow-left" />&nbsp;<span jhiTranslate="entity.action.back">Volver</span>
+        </button>
+
+        <button type="button" [routerLink]="['/politica-escalamiento', politicaEscalamientoRef.id, 'edit']" class="btn btn-primary">
+          <fa-icon icon="pencil-alt" />&nbsp;<span jhiTranslate="entity.action.edit">Editar</span>
+        </button>
+      </div>
+    }
+  </div>
+</div>

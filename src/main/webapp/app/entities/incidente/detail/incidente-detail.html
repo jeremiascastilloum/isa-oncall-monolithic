@@ -1,0 +1,89 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    @if (incidente(); as incidenteRef) {
+      <div>
+        <h2 data-cy="incidenteDetailsHeading"><span jhiTranslate="oncallApp.incidente.detail.title">Incidente</span></h2>
+
+        <hr />
+
+        <jhi-alert-error />
+
+        <jhi-alert />
+
+        <dl class="row-md jh-entity-details">
+          <dt><span jhiTranslate="global.field.id">ID</span></dt>
+          <dd>
+            <span>{{ incidenteRef.id }}</span>
+          </dd>
+          <dt><span jhiTranslate="oncallApp.incidente.titulo">Titulo</span></dt>
+          <dd>
+            <span>{{ incidenteRef.titulo }}</span>
+          </dd>
+          <dt><span jhiTranslate="oncallApp.incidente.descripcion">Descripcion</span></dt>
+          <dd>
+            <span>{{ incidenteRef.descripcion }}</span>
+          </dd>
+          <dt><span jhiTranslate="oncallApp.incidente.severidad">Severidad</span></dt>
+          <dd>
+            <span [jhiTranslate]="'oncallApp.Severidad.' + (incidenteRef.severidad ?? 'null')">{{
+              { null: '', SEV1: 'SEV1', SEV2: 'SEV2', SEV3: 'SEV3', SEV4: 'SEV4' }[incidenteRef.severidad ?? 'null']
+            }}</span>
+          </dd>
+          <dt><span jhiTranslate="oncallApp.incidente.estado">Estado</span></dt>
+          <dd>
+            <span [jhiTranslate]="'oncallApp.EstadoIncidente.' + (incidenteRef.estado ?? 'null')">{{
+              { null: '', ABIERTO: 'ABIERTO', RECONOCIDO: 'RECONOCIDO', MITIGADO: 'MITIGADO', RESUELTO: 'RESUELTO', CERRADO: 'CERRADO' }[
+                incidenteRef.estado ?? 'null'
+              ]
+            }}</span>
+          </dd>
+          <dt><span jhiTranslate="oncallApp.incidente.detectadoEn">Detectado En</span></dt>
+          <dd>
+            <span>{{ incidenteRef.detectadoEn | formatMediumDatetime }}</span>
+          </dd>
+          <dt><span jhiTranslate="oncallApp.incidente.reconocidoEn">Reconocido En</span></dt>
+          <dd>
+            <span>{{ incidenteRef.reconocidoEn | formatMediumDatetime }}</span>
+          </dd>
+          <dt><span jhiTranslate="oncallApp.incidente.mitigadoEn">Mitigado En</span></dt>
+          <dd>
+            <span>{{ incidenteRef.mitigadoEn | formatMediumDatetime }}</span>
+          </dd>
+          <dt><span jhiTranslate="oncallApp.incidente.resueltoEn">Resuelto En</span></dt>
+          <dd>
+            <span>{{ incidenteRef.resueltoEn | formatMediumDatetime }}</span>
+          </dd>
+          <dt><span jhiTranslate="oncallApp.incidente.usuariosAfectados">Usuarios Afectados</span></dt>
+          <dd>
+            <span>{{ incidenteRef.usuariosAfectados }}</span>
+          </dd>
+          <dt><span jhiTranslate="oncallApp.incidente.cumplioObjetivo">Cumplio Objetivo</span></dt>
+          <dd>
+            <span>{{ incidenteRef.cumplioObjetivo }}</span>
+          </dd>
+          <dt><span jhiTranslate="oncallApp.incidente.comandante">Comandante</span></dt>
+          <dd>
+            <span>{{ incidenteRef.comandante?.login }}</span>
+          </dd>
+          <dt><span jhiTranslate="oncallApp.incidente.servicio">Servicio</span></dt>
+          <dd>
+            @for (servicio of incidenteRef.servicios; track $index; let last = $last) {
+              <span>
+                <a [routerLink]="['/servicio', servicio.id, 'view']">{{ servicio?.nombre }}</a
+                >{{ last ? '' : ', ' }}
+              </span>
+            }
+          </dd>
+        </dl>
+
+        <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+          <fa-icon icon="arrow-left" />&nbsp;<span jhiTranslate="entity.action.back">Volver</span>
+        </button>
+
+        <button type="button" [routerLink]="['/incidente', incidenteRef.id, 'edit']" class="btn btn-primary">
+          <fa-icon icon="pencil-alt" />&nbsp;<span jhiTranslate="entity.action.edit">Editar</span>
+        </button>
+      </div>
+    }
+  </div>
+</div>

@@ -1,0 +1,31 @@
+id;canal;destino;estado;enviada_en;intentos;error_mensaje;incidente_id;destinatario_id
+1;WEBHOOK;supposing during whereas;ENTREGADA;2023-12-04T09:27:27;4;er abscond;1;1
+2;WEBHOOK;nephew around legging;ENVIADA;2023-12-04T14:26:18;8;excepting reward;2;2
+3;WEBHOOK;squiggly unfortunate lady;RECONOCIDA;2023-12-04T21:08:33;4;apropos cinder;3;1
+4;WEBHOOK;in breastplate;PENDIENTE;2023-12-04T15:01:52;4;heavy who;4;1
+5;EMAIL;scram usefully;RECONOCIDA;2023-12-04T00:06:01;4;pfft willfully gosh;5;1
+6;SMS;bah teeming;FALLIDA;2023-12-04T19:46:04;8;comparison;6;1
+7;SMS;aw since phooey;FALLIDA;2023-12-04T22:31:27;7;retool oddly unzip;7;1
+8;PUSH;circa;RECONOCIDA;2023-12-04T20:06:40;4;before;8;2
+9;LLAMADA;coliseum venture;PENDIENTE;2023-12-03T23:43:47;6;upon sermon inferior;9;2
+10;PUSH;hope unwelcome for;ENTREGADA;2023-12-04T10:07:12;5;kindheartedly;10;2
+11;PUSH;but afterwards joyously;FALLIDA;2023-12-04T04:08:53;1;miserably analogy consequently;11;2
+12;LLAMADA;apropos;RECONOCIDA;2023-12-04T14:35:26;7;now;12;1
+13;LLAMADA;over;FALLIDA;2023-12-04T01:13:39;8;different devoted;13;2
+14;SMS;suddenly partially institute;ENTREGADA;2023-12-04T01:28:49;5;throughout usefully overstay;14;2
+15;SMS;inasmuch;ENTREGADA;2023-12-04T13:52:34;4;heroine pendant optimistically;15;2
+16;LLAMADA;slope vice clearly;FALLIDA;2023-12-04T15:08:32;10;leading;16;1
+17;WEBHOOK;anti when;ENTREGADA;2023-12-04T13:08:43;8;attest;17;2
+18;SMS;grumpy till charming;FALLIDA;2023-12-03T23:55:21;9;inwardly timely;18;2
+19;EMAIL;stuff pear rewarding;PENDIENTE;2023-12-04T18:27:14;5;in safely;19;2
+20;LLAMADA;celebrate finger;ENTREGADA;2023-12-04T12:48:32;9;divert;20;2
+21;LLAMADA;unless;ENVIADA;2023-12-04T00:03:05;7;downshift;21;1
+22;LLAMADA;pro really;ENTREGADA;2023-12-04T21:57:25;1;phew;22;2
+23;WEBHOOK;or;RECONOCIDA;2023-12-04T12:20:04;10;classic;23;2
+24;WEBHOOK;issue kooky deprave;FALLIDA;2023-12-04T13:09:28;7;er department clonk;24;2
+25;WEBHOOK;hmph;ENTREGADA;2023-12-04T20:15:24;4;an true perspire;25;1
+26;SMS;potentially beneath;ENTREGADA;2023-12-04T10:34:28;2;below mid;26;1
+27;EMAIL;ack whereas unexpectedly;PENDIENTE;2023-12-04T13:17:41;0;gee log inside;27;1
+28;SMS;schnitzel atop thump;ENTREGADA;2023-12-04T11:39:30;4;cram characterization;28;1
+29;SMS;pry gloat;RECONOCIDA;2023-12-03T23:02:27;8;modulo till legal;29;2
+30;SMS;majestic anenst;RECONOCIDA;2023-12-03T22:47:32;5;searchingly whenever than;30;2

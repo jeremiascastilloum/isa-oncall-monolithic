@@ -1,0 +1,123 @@
+<div>
+  <h2 id="page-heading" data-cy="RotacionHeading">
+    <span jhiTranslate="oncallApp.rotacion.home.title">Rotacions</span>
+
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-info me-2" (click)="load()" [disabled]="isLoading()">
+        <fa-icon icon="sync" [animation]="isLoading() ? 'spin' : undefined" />
+        <span jhiTranslate="oncallApp.rotacion.home.refreshListLabel">Refrescar lista</span>
+      </button>
+
+      <button
+        id="jh-create-entity"
+        data-cy="entityCreateButton"
+        class="btn btn-primary jh-create-entity create-rotacion"
+        [routerLink]="['/rotacion/new']"
+      >
+        <fa-icon icon="plus" />
+        <span jhiTranslate="oncallApp.rotacion.home.createLabel">Crear nuevo Rotacion</span>
+      </button>
+    </div>
+  </h2>
+
+  <jhi-alert-error />
+
+  <jhi-alert />
+
+  @if (rotacions().length === 0) {
+    <div class="alert alert-warning" id="no-result">
+      <span jhiTranslate="oncallApp.rotacion.home.notFound">Ningún Rotacions encontrado</span>
+    </div>
+  } @else {
+    <div class="table-responsive table-entities" id="entities">
+      <table class="table table-striped" aria-describedby="page-heading">
+        <thead>
+          <tr jhiSort [(sortState)]="sortState" (sortChange)="navigateToWithComponentValues($event)">
+            <th scope="col" jhiSortBy="id">
+              <div class="d-flex">
+                <span jhiTranslate="global.field.id">ID</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="nombre">
+              <div class="d-flex">
+                <span jhiTranslate="oncallApp.rotacion.nombre">Nombre</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="tipo">
+              <div class="d-flex">
+                <span jhiTranslate="oncallApp.rotacion.tipo">Tipo</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="zonaHoraria">
+              <div class="d-flex">
+                <span jhiTranslate="oncallApp.rotacion.zonaHoraria">Zona Horaria</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="activa">
+              <div class="d-flex">
+                <span jhiTranslate="oncallApp.rotacion.activa">Activa</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="equipo.nombre">
+              <div class="d-flex">
+                <span jhiTranslate="oncallApp.rotacion.equipo">Equipo</span>
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col"></th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (rotacion of rotacions(); track trackId(rotacion)) {
+            <tr data-cy="entityTable">
+              <td>
+                <a [routerLink]="['/rotacion', rotacion.id, 'view']">{{ rotacion.id }}</a>
+              </td>
+              <td>{{ rotacion.nombre }}</td>
+              <td [jhiTranslate]="'oncallApp.TipoRotacion.' + (rotacion.tipo ?? 'null')">
+                {{ { null: '', DIARIA: 'DIARIA', SEMANAL: 'SEMANAL', PERSONALIZADA: 'PERSONALIZADA' }[rotacion.tipo ?? 'null'] }}
+              </td>
+              <td>{{ rotacion.zonaHoraria }}</td>
+              <td>{{ rotacion.activa }}</td>
+              <td>
+                @if (rotacion.equipo) {
+                  <div>
+                    <a [routerLink]="['/equipo', rotacion.equipo.id, 'view']">{{ rotacion.equipo.nombre }}</a>
+                  </div>
+                }
+              </td>
+              <td class="text-end">
+                <div class="btn-group">
+                  <a [routerLink]="['/rotacion', rotacion.id, 'view']" class="btn btn-info btn-sm" data-cy="entityDetailsButton">
+                    <fa-icon icon="eye" />
+                    <span class="d-none d-md-inline" jhiTranslate="entity.action.view">Vista</span>
+                  </a>
+
+                  <a [routerLink]="['/rotacion', rotacion.id, 'edit']" class="btn btn-primary btn-sm" data-cy="entityEditButton">
+                    <fa-icon icon="pencil-alt" />
+                    <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Editar</span>
+                  </a>
+
+                  <button type="submit" (click)="delete(rotacion)" class="btn btn-danger btn-sm" data-cy="entityDeleteButton">
+                    <fa-icon icon="times" />
+                    <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Eliminar</span>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</div>

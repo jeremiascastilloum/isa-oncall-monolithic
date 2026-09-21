@@ -1,0 +1,68 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    @if (eventoDeIncidente(); as eventoDeIncidenteRef) {
+      <div>
+        <h2 data-cy="eventoDeIncidenteDetailsHeading">
+          <span jhiTranslate="oncallApp.eventoDeIncidente.detail.title">Evento De Incidente</span>
+        </h2>
+
+        <hr />
+
+        <jhi-alert-error />
+
+        <jhi-alert />
+
+        <dl class="row-md jh-entity-details">
+          <dt><span jhiTranslate="global.field.id">ID</span></dt>
+          <dd>
+            <span>{{ eventoDeIncidenteRef.id }}</span>
+          </dd>
+          <dt><span jhiTranslate="oncallApp.eventoDeIncidente.tipo">Tipo</span></dt>
+          <dd>
+            <span [jhiTranslate]="'oncallApp.TipoEvento.' + (eventoDeIncidenteRef.tipo ?? 'null')">{{
+              {
+                null: '',
+                CREACION: 'CREACION',
+                ASIGNACION: 'ASIGNACION',
+                ESCALAMIENTO: 'ESCALAMIENTO',
+                NOTA: 'NOTA',
+                CAMBIO_DE_ESTADO: 'CAMBIO_DE_ESTADO',
+                RESOLUCION: 'RESOLUCION',
+              }[eventoDeIncidenteRef.tipo ?? 'null']
+            }}</span>
+          </dd>
+          <dt><span jhiTranslate="oncallApp.eventoDeIncidente.detalle">Detalle</span></dt>
+          <dd>
+            <span>{{ eventoDeIncidenteRef.detalle }}</span>
+          </dd>
+          <dt><span jhiTranslate="oncallApp.eventoDeIncidente.ocurridoEn">Ocurrido En</span></dt>
+          <dd>
+            <span>{{ eventoDeIncidenteRef.ocurridoEn | formatMediumDatetime }}</span>
+          </dd>
+          <dt><span jhiTranslate="oncallApp.eventoDeIncidente.automatico">Automatico</span></dt>
+          <dd>
+            <span>{{ eventoDeIncidenteRef.automatico }}</span>
+          </dd>
+          <dt><span jhiTranslate="oncallApp.eventoDeIncidente.incidente">Incidente</span></dt>
+          <dd>
+            @if (eventoDeIncidente()!.incidente) {
+              <div>
+                <a [routerLink]="['/incidente', eventoDeIncidente()!.incidente?.id, 'view']">{{
+                  eventoDeIncidenteRef.incidente?.titulo
+                }}</a>
+              </div>
+            }
+          </dd>
+        </dl>
+
+        <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+          <fa-icon icon="arrow-left" />&nbsp;<span jhiTranslate="entity.action.back">Volver</span>
+        </button>
+
+        <button type="button" [routerLink]="['/evento-de-incidente', eventoDeIncidenteRef.id, 'edit']" class="btn btn-primary">
+          <fa-icon icon="pencil-alt" />&nbsp;<span jhiTranslate="entity.action.edit">Editar</span>
+        </button>
+      </div>
+    }
+  </div>
+</div>

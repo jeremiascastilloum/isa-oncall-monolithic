@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+    <property name="now" value="current_timestamp" dbms="postgresql"/>
+    <property name="floatType" value="float4" dbms="postgresql"/>
+    <property name="clobType" value="clob" dbms="postgresql"/>
+    <property name="blobType" value="blob" dbms="postgresql"/>
+    <property name="uuidType" value="uuid" dbms="postgresql"/>
+    <property name="datetimeType" value="datetime" dbms="postgresql"/>
+    <property name="timeType" value="time(6)" dbms="postgresql"/>
+
+    <include file="config/liquibase/changelog/00000000000000_initial_schema.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20231204223323_added_entity_Equipo.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20231204223423_added_entity_Servicio.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20231204223523_added_entity_ObjetivoDeServicio.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20231204223623_added_entity_Alerta.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20231204223723_added_entity_Incidente.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20231204223823_added_entity_EventoDeIncidente.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20231204223923_added_entity_Rotacion.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20231204224023_added_entity_TurnoDeGuardia.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20231204224123_added_entity_PoliticaEscalamiento.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20231204224223_added_entity_PasoEscalamiento.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20231204224323_added_entity_Notificacion.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20231204224423_added_entity_Postmortem.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20231204224523_added_entity_AccionCorrectiva.xml" relativeToChangelogFile="false"/>
+    <!-- jhipster-needle-liquibase-add-changelog - JHipster will add liquibase changelogs here -->
+    <include file="config/liquibase/changelog/20231204223423_added_entity_constraints_Servicio.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20231204223523_added_entity_constraints_ObjetivoDeServicio.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20231204223623_added_entity_constraints_Alerta.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20231204223723_added_entity_constraints_Incidente.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20231204223823_added_entity_constraints_EventoDeIncidente.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20231204223923_added_entity_constraints_Rotacion.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20231204224023_added_entity_constraints_TurnoDeGuardia.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20231204224123_added_entity_constraints_PoliticaEscalamiento.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20231204224223_added_entity_constraints_PasoEscalamiento.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20231204224323_added_entity_constraints_Notificacion.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20231204224423_added_entity_constraints_Postmortem.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20231204224523_added_entity_constraints_AccionCorrectiva.xml" relativeToChangelogFile="false"/>
+    <!-- jhipster-needle-liquibase-add-constraints-changelog - JHipster will add liquibase constraints changelogs here -->
+    <!-- jhipster-needle-liquibase-add-incremental-changelog - JHipster will add incremental liquibase changelogs here -->
+</databaseChangeLog>

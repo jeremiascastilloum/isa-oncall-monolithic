@@ -1,0 +1,214 @@
+<div>
+  <h2 id="page-heading" data-cy="IncidenteHeading">
+    <span jhiTranslate="oncallApp.incidente.home.title">Incidentes</span>
+
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-info me-2" (click)="load()" [disabled]="isLoading()">
+        <fa-icon icon="sync" [animation]="isLoading() ? 'spin' : undefined" />
+        <span jhiTranslate="oncallApp.incidente.home.refreshListLabel">Refrescar lista</span>
+      </button>
+
+      <button
+        id="jh-create-entity"
+        data-cy="entityCreateButton"
+        class="btn btn-primary jh-create-entity create-incidente"
+        [routerLink]="['/incidente/new']"
+      >
+        <fa-icon icon="plus" />
+        <span jhiTranslate="oncallApp.incidente.home.createLabel">Crear nuevo Incidente</span>
+      </button>
+    </div>
+  </h2>
+
+  <jhi-alert-error />
+
+  <jhi-alert />
+
+  <jhi-filter [filters]="filters" />
+
+  @if (incidentes().length === 0) {
+    <div class="alert alert-warning" id="no-result">
+      <span jhiTranslate="oncallApp.incidente.home.notFound">Ningún Incidentes encontrado</span>
+    </div>
+  } @else {
+    <div class="table-responsive table-entities" id="entities">
+      <table class="table table-striped" aria-describedby="page-heading">
+        <thead>
+          <tr jhiSort [(sortState)]="sortState" (sortChange)="navigateToWithComponentValues($event)">
+            <th scope="col" jhiSortBy="id">
+              <div class="d-flex">
+                <span jhiTranslate="global.field.id">ID</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="titulo">
+              <div class="d-flex">
+                <span jhiTranslate="oncallApp.incidente.titulo">Titulo</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="descripcion">
+              <div class="d-flex">
+                <span jhiTranslate="oncallApp.incidente.descripcion">Descripcion</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="severidad">
+              <div class="d-flex">
+                <span jhiTranslate="oncallApp.incidente.severidad">Severidad</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="estado">
+              <div class="d-flex">
+                <span jhiTranslate="oncallApp.incidente.estado">Estado</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="detectadoEn">
+              <div class="d-flex">
+                <span jhiTranslate="oncallApp.incidente.detectadoEn">Detectado En</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="reconocidoEn">
+              <div class="d-flex">
+                <span jhiTranslate="oncallApp.incidente.reconocidoEn">Reconocido En</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="mitigadoEn">
+              <div class="d-flex">
+                <span jhiTranslate="oncallApp.incidente.mitigadoEn">Mitigado En</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="resueltoEn">
+              <div class="d-flex">
+                <span jhiTranslate="oncallApp.incidente.resueltoEn">Resuelto En</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="usuariosAfectados">
+              <div class="d-flex">
+                <span jhiTranslate="oncallApp.incidente.usuariosAfectados">Usuarios Afectados</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="cumplioObjetivo">
+              <div class="d-flex">
+                <span jhiTranslate="oncallApp.incidente.cumplioObjetivo">Cumplio Objetivo</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="comandante.login">
+              <div class="d-flex">
+                <span jhiTranslate="oncallApp.incidente.comandante">Comandante</span>
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col"></th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (incidente of incidentes(); track trackId(incidente)) {
+            <tr data-cy="entityTable">
+              <td>
+                <a [routerLink]="['/incidente', incidente.id, 'view']">{{ incidente.id }}</a>
+              </td>
+              <td>{{ incidente.titulo }}</td>
+              <td>{{ incidente.descripcion }}</td>
+              <td [jhiTranslate]="'oncallApp.Severidad.' + (incidente.severidad ?? 'null')">
+                {{ { null: '', SEV1: 'SEV1', SEV2: 'SEV2', SEV3: 'SEV3', SEV4: 'SEV4' }[incidente.severidad ?? 'null'] }}
+              </td>
+              <td [jhiTranslate]="'oncallApp.EstadoIncidente.' + (incidente.estado ?? 'null')">
+                {{
+                  {
+                    null: '',
+                    ABIERTO: 'ABIERTO',
+                    RECONOCIDO: 'RECONOCIDO',
+                    MITIGADO: 'MITIGADO',
+                    RESUELTO: 'RESUELTO',
+                    CERRADO: 'CERRADO',
+                  }[incidente.estado ?? 'null']
+                }}
+              </td>
+              <td>{{ incidente.detectadoEn | formatMediumDatetime }}</td>
+              <td>{{ incidente.reconocidoEn | formatMediumDatetime }}</td>
+              <td>{{ incidente.mitigadoEn | formatMediumDatetime }}</td>
+              <td>{{ incidente.resueltoEn | formatMediumDatetime }}</td>
+              <td>{{ incidente.usuariosAfectados }}</td>
+              <td>{{ incidente.cumplioObjetivo }}</td>
+              <td>
+                {{ incidente.comandante?.login }}
+              </td>
+              <td class="text-end">
+                <div class="btn-group">
+                  <button
+                    type="submit"
+                    [routerLink]="['/alerta']"
+                    [queryParams]="{ 'filter[incidenteId.in]': incidente.id }"
+                    class="btn btn-info btn-sm"
+                    data-cy="filterOtherEntityButton"
+                  >
+                    <fa-icon icon="eye" />
+                    <span
+                      class="d-none d-md-inline"
+                      jhiTranslate="entity.action.show"
+                      [translateValues]="{ otherEntity: ('oncallApp.incidente.alerta' | translate) }"
+                      >Show Alerta</span
+                    >
+                  </button>
+                  <a [routerLink]="['/incidente', incidente.id, 'view']" class="btn btn-info btn-sm" data-cy="entityDetailsButton">
+                    <fa-icon icon="eye" />
+                    <span class="d-none d-md-inline" jhiTranslate="entity.action.view">Vista</span>
+                  </a>
+
+                  <a [routerLink]="['/incidente', incidente.id, 'edit']" class="btn btn-primary btn-sm" data-cy="entityEditButton">
+                    <fa-icon icon="pencil-alt" />
+                    <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Editar</span>
+                  </a>
+
+                  <button type="submit" (click)="delete(incidente)" class="btn btn-danger btn-sm" data-cy="entityDeleteButton">
+                    <fa-icon icon="times" />
+                    <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Eliminar</span>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+  @if (incidentes().length > 0) {
+    <div>
+      <div class="d-flex justify-content-center">
+        <jhi-item-count [params]="{ page: page(), totalItems: totalItems(), itemsPerPage: itemsPerPage() }" />
+      </div>
+
+      <div class="d-flex justify-content-center">
+        <ngb-pagination
+          [collectionSize]="totalItems()"
+          [page]="page()"
+          [pageSize]="itemsPerPage()"
+          [maxSize]="5"
+          [rotate]="true"
+          [boundaryLinks]="true"
+          (pageChange)="navigateToPage($event)"
+        />
+      </div>
+    </div>
+  }
+</div>

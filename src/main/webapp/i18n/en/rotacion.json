@@ -1,0 +1,30 @@
+{
+  "oncallApp": {
+    "rotacion": {
+      "home": {
+        "title": "Rotacions",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "Create a new Rotacion",
+        "createOrEditLabel": "Create or edit a Rotacion",
+        "notFound": "No Rotacions found"
+      },
+      "created": "A new Rotacion is created with identifier {{ param }}",
+      "updated": "A Rotacion is updated with identifier {{ param }}",
+      "deleted": "A Rotacion is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Rotacion {{ id }}?"
+      },
+      "detail": {
+        "title": "Rotacion"
+      },
+      "id": "ID",
+      "nombre": "Nombre",
+      "tipo": "Tipo",
+      "zonaHoraria": "Zona Horaria",
+      "activa": "Activa",
+      "equipo": "Equipo",
+      "turno": "Turno",
+      "paso": "Paso"
+    }
+  }
+}

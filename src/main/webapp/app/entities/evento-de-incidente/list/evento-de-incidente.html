@@ -1,0 +1,141 @@
+<div>
+  <h2 id="page-heading" data-cy="EventoDeIncidenteHeading">
+    <span jhiTranslate="oncallApp.eventoDeIncidente.home.title">Evento De Incidentes</span>
+
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-info me-2" (click)="load()" [disabled]="isLoading()">
+        <fa-icon icon="sync" [animation]="isLoading() ? 'spin' : undefined" />
+        <span jhiTranslate="oncallApp.eventoDeIncidente.home.refreshListLabel">Refrescar lista</span>
+      </button>
+
+      <button
+        id="jh-create-entity"
+        data-cy="entityCreateButton"
+        class="btn btn-primary jh-create-entity create-evento-de-incidente"
+        [routerLink]="['/evento-de-incidente/new']"
+      >
+        <fa-icon icon="plus" />
+        <span jhiTranslate="oncallApp.eventoDeIncidente.home.createLabel">Crear nuevo Evento De Incidente</span>
+      </button>
+    </div>
+  </h2>
+
+  <jhi-alert-error />
+
+  <jhi-alert />
+
+  @if (eventoDeIncidentes().length === 0) {
+    <div class="alert alert-warning" id="no-result">
+      <span jhiTranslate="oncallApp.eventoDeIncidente.home.notFound">Ningún Evento De Incidentes encontrado</span>
+    </div>
+  } @else {
+    <div class="table-responsive table-entities" id="entities">
+      <table class="table table-striped" aria-describedby="page-heading">
+        <thead>
+          <tr jhiSort [(sortState)]="sortState" (sortChange)="navigateToWithComponentValues($event)">
+            <th scope="col" jhiSortBy="id">
+              <div class="d-flex">
+                <span jhiTranslate="global.field.id">ID</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="tipo">
+              <div class="d-flex">
+                <span jhiTranslate="oncallApp.eventoDeIncidente.tipo">Tipo</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="detalle">
+              <div class="d-flex">
+                <span jhiTranslate="oncallApp.eventoDeIncidente.detalle">Detalle</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="ocurridoEn">
+              <div class="d-flex">
+                <span jhiTranslate="oncallApp.eventoDeIncidente.ocurridoEn">Ocurrido En</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="automatico">
+              <div class="d-flex">
+                <span jhiTranslate="oncallApp.eventoDeIncidente.automatico">Automatico</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="incidente.titulo">
+              <div class="d-flex">
+                <span jhiTranslate="oncallApp.eventoDeIncidente.incidente">Incidente</span>
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col"></th>
+          </tr>
+        </thead>
+        <tbody infinite-scroll (scrolled)="loadNextPage()" [infiniteScrollDisabled]="!hasMorePage()" [infiniteScrollDistance]="0">
+          @for (eventoDeIncidente of eventoDeIncidentes(); track trackId(eventoDeIncidente)) {
+            <tr data-cy="entityTable">
+              <td>
+                <a [routerLink]="['/evento-de-incidente', eventoDeIncidente.id, 'view']">{{ eventoDeIncidente.id }}</a>
+              </td>
+              <td [jhiTranslate]="'oncallApp.TipoEvento.' + (eventoDeIncidente.tipo ?? 'null')">
+                {{
+                  {
+                    null: '',
+                    CREACION: 'CREACION',
+                    ASIGNACION: 'ASIGNACION',
+                    ESCALAMIENTO: 'ESCALAMIENTO',
+                    NOTA: 'NOTA',
+                    CAMBIO_DE_ESTADO: 'CAMBIO_DE_ESTADO',
+                    RESOLUCION: 'RESOLUCION',
+                  }[eventoDeIncidente.tipo ?? 'null']
+                }}
+              </td>
+              <td>{{ eventoDeIncidente.detalle }}</td>
+              <td>{{ eventoDeIncidente.ocurridoEn | formatMediumDatetime }}</td>
+              <td>{{ eventoDeIncidente.automatico }}</td>
+              <td>
+                @if (eventoDeIncidente.incidente) {
+                  <div>
+                    <a [routerLink]="['/incidente', eventoDeIncidente.incidente.id, 'view']">{{ eventoDeIncidente.incidente.titulo }}</a>
+                  </div>
+                }
+              </td>
+              <td class="text-end">
+                <div class="btn-group">
+                  <a
+                    [routerLink]="['/evento-de-incidente', eventoDeIncidente.id, 'view']"
+                    class="btn btn-info btn-sm"
+                    data-cy="entityDetailsButton"
+                  >
+                    <fa-icon icon="eye" />
+                    <span class="d-none d-md-inline" jhiTranslate="entity.action.view">Vista</span>
+                  </a>
+
+                  <a
+                    [routerLink]="['/evento-de-incidente', eventoDeIncidente.id, 'edit']"
+                    class="btn btn-primary btn-sm"
+                    data-cy="entityEditButton"
+                  >
+                    <fa-icon icon="pencil-alt" />
+                    <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Editar</span>
+                  </a>
+
+                  <button type="submit" (click)="delete(eventoDeIncidente)" class="btn btn-danger btn-sm" data-cy="entityDeleteButton">
+                    <fa-icon icon="times" />
+                    <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Eliminar</span>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</div>

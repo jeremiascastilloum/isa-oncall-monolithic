@@ -1,0 +1,138 @@
+<div>
+  <h2 id="page-heading" data-cy="TurnoDeGuardiaHeading">
+    <span jhiTranslate="oncallApp.turnoDeGuardia.home.title">Turno De Guardias</span>
+
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-info me-2" (click)="load()" [disabled]="isLoading()">
+        <fa-icon icon="sync" [animation]="isLoading() ? 'spin' : undefined" />
+        <span jhiTranslate="oncallApp.turnoDeGuardia.home.refreshListLabel">Refrescar lista</span>
+      </button>
+
+      <button
+        id="jh-create-entity"
+        data-cy="entityCreateButton"
+        class="btn btn-primary jh-create-entity create-turno-de-guardia"
+        [routerLink]="['/turno-de-guardia/new']"
+      >
+        <fa-icon icon="plus" />
+        <span jhiTranslate="oncallApp.turnoDeGuardia.home.createLabel">Crear nuevo Turno De Guardia</span>
+      </button>
+    </div>
+  </h2>
+
+  <jhi-alert-error />
+
+  <jhi-alert />
+
+  @if (turnoDeGuardias().length === 0) {
+    <div class="alert alert-warning" id="no-result">
+      <span jhiTranslate="oncallApp.turnoDeGuardia.home.notFound">Ningún Turno De Guardias encontrado</span>
+    </div>
+  } @else {
+    <div class="table-responsive table-entities" id="entities">
+      <table class="table table-striped" aria-describedby="page-heading">
+        <thead>
+          <tr jhiSort [(sortState)]="sortState" (sortChange)="navigateToWithComponentValues($event)">
+            <th scope="col" jhiSortBy="id">
+              <div class="d-flex">
+                <span jhiTranslate="global.field.id">ID</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="desde">
+              <div class="d-flex">
+                <span jhiTranslate="oncallApp.turnoDeGuardia.desde">Desde</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="hasta">
+              <div class="d-flex">
+                <span jhiTranslate="oncallApp.turnoDeGuardia.hasta">Hasta</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="esReemplazo">
+              <div class="d-flex">
+                <span jhiTranslate="oncallApp.turnoDeGuardia.esReemplazo">Es Reemplazo</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="nota">
+              <div class="d-flex">
+                <span jhiTranslate="oncallApp.turnoDeGuardia.nota">Nota</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="rotacion.nombre">
+              <div class="d-flex">
+                <span jhiTranslate="oncallApp.turnoDeGuardia.rotacion">Rotacion</span>
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="responsable.login">
+              <div class="d-flex">
+                <span jhiTranslate="oncallApp.turnoDeGuardia.responsable">Responsable</span>
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col"></th>
+          </tr>
+        </thead>
+        <tbody infinite-scroll (scrolled)="loadNextPage()" [infiniteScrollDisabled]="!hasMorePage()" [infiniteScrollDistance]="0">
+          @for (turnoDeGuardia of turnoDeGuardias(); track trackId(turnoDeGuardia)) {
+            <tr data-cy="entityTable">
+              <td>
+                <a [routerLink]="['/turno-de-guardia', turnoDeGuardia.id, 'view']">{{ turnoDeGuardia.id }}</a>
+              </td>
+              <td>{{ turnoDeGuardia.desde | formatMediumDatetime }}</td>
+              <td>{{ turnoDeGuardia.hasta | formatMediumDatetime }}</td>
+              <td>{{ turnoDeGuardia.esReemplazo }}</td>
+              <td>{{ turnoDeGuardia.nota }}</td>
+              <td>
+                @if (turnoDeGuardia.rotacion) {
+                  <div>
+                    <a [routerLink]="['/rotacion', turnoDeGuardia.rotacion.id, 'view']">{{ turnoDeGuardia.rotacion.nombre }}</a>
+                  </div>
+                }
+              </td>
+              <td>
+                {{ turnoDeGuardia.responsable?.login }}
+              </td>
+              <td class="text-end">
+                <div class="btn-group">
+                  <a
+                    [routerLink]="['/turno-de-guardia', turnoDeGuardia.id, 'view']"
+                    class="btn btn-info btn-sm"
+                    data-cy="entityDetailsButton"
+                  >
+                    <fa-icon icon="eye" />
+                    <span class="d-none d-md-inline" jhiTranslate="entity.action.view">Vista</span>
+                  </a>
+
+                  <a
+                    [routerLink]="['/turno-de-guardia', turnoDeGuardia.id, 'edit']"
+                    class="btn btn-primary btn-sm"
+                    data-cy="entityEditButton"
+                  >
+                    <fa-icon icon="pencil-alt" />
+                    <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Editar</span>
+                  </a>
+
+                  <button type="submit" (click)="delete(turnoDeGuardia)" class="btn btn-danger btn-sm" data-cy="entityDeleteButton">
+                    <fa-icon icon="times" />
+                    <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Eliminar</span>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</div>

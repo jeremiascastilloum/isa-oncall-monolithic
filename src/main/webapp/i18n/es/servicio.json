@@ -1,0 +1,34 @@
+{
+  "oncallApp": {
+    "servicio": {
+      "home": {
+        "title": "Servicios",
+        "refreshListLabel": "Refrescar lista",
+        "createLabel": "Crear nuevo Servicio",
+        "createOrEditLabel": "Crear o editar Servicio",
+        "notFound": "Ningún Servicios encontrado"
+      },
+      "created": "Un nuevo Servicio ha sido creado con el identificador {{ param }}",
+      "updated": "Un Servicio ha sido actualizado con el identificador {{ param }}",
+      "deleted": "Un Servicio ha sido eliminado con el identificador {{ param }}",
+      "delete": {
+        "question": "¿Seguro que quiere eliminar Servicio {{ id }}?"
+      },
+      "detail": {
+        "title": "Servicio"
+      },
+      "id": "ID",
+      "nombre": "Nombre",
+      "descripcion": "Descripcion",
+      "criticidad": "Criticidad",
+      "entorno": "Entorno",
+      "repositorioUrl": "Repositorio Url",
+      "activo": "Activo",
+      "equipo": "Equipo",
+      "objetivo": "Objetivo",
+      "alerta": "Alerta",
+      "politica": "Politica",
+      "incidente": "Incidente"
+    }
+  }
+}

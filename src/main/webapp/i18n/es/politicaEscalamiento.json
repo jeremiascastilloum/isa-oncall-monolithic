@@ -1,0 +1,28 @@
+{
+  "oncallApp": {
+    "politicaEscalamiento": {
+      "home": {
+        "title": "Politica Escalamientos",
+        "refreshListLabel": "Refrescar lista",
+        "createLabel": "Crear nuevo Politica Escalamiento",
+        "createOrEditLabel": "Crear o editar Politica Escalamiento",
+        "notFound": "Ningún Politica Escalamientos encontrado"
+      },
+      "created": "Un nuevo Politica Escalamiento ha sido creado con el identificador {{ param }}",
+      "updated": "Un Politica Escalamiento ha sido actualizado con el identificador {{ param }}",
+      "deleted": "Un Politica Escalamiento ha sido eliminado con el identificador {{ param }}",
+      "delete": {
+        "question": "¿Seguro que quiere eliminar Politica Escalamiento {{ id }}?"
+      },
+      "detail": {
+        "title": "Politica Escalamiento"
+      },
+      "id": "ID",
+      "nombre": "Nombre",
+      "descripcion": "Descripcion",
+      "repetirVeces": "Repetir Veces",
+      "servicio": "Servicio",
+      "paso": "Paso"
+    }
+  }
+}

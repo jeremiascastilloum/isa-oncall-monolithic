@@ -1,0 +1,28 @@
+{
+  "oncallApp": {
+    "eventoDeIncidente": {
+      "home": {
+        "title": "Evento De Incidentes",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "Create a new Evento De Incidente",
+        "createOrEditLabel": "Create or edit a Evento De Incidente",
+        "notFound": "No Evento De Incidentes found"
+      },
+      "created": "A new Evento De Incidente is created with identifier {{ param }}",
+      "updated": "A Evento De Incidente is updated with identifier {{ param }}",
+      "deleted": "A Evento De Incidente is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Evento De Incidente {{ id }}?"
+      },
+      "detail": {
+        "title": "Evento De Incidente"
+      },
+      "id": "ID",
+      "tipo": "Tipo",
+      "detalle": "Detalle",
+      "ocurridoEn": "Ocurrido En",
+      "automatico": "Automatico",
+      "incidente": "Incidente"
+    }
+  }
+}

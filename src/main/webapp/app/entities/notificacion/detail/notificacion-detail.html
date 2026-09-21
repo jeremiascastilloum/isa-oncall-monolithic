@@ -1,0 +1,79 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    @if (notificacion(); as notificacionRef) {
+      <div>
+        <h2 data-cy="notificacionDetailsHeading"><span jhiTranslate="oncallApp.notificacion.detail.title">Notificacion</span></h2>
+
+        <hr />
+
+        <jhi-alert-error />
+
+        <jhi-alert />
+
+        <dl class="row-md jh-entity-details">
+          <dt><span jhiTranslate="global.field.id">ID</span></dt>
+          <dd>
+            <span>{{ notificacionRef.id }}</span>
+          </dd>
+          <dt><span jhiTranslate="oncallApp.notificacion.canal">Canal</span></dt>
+          <dd>
+            <span [jhiTranslate]="'oncallApp.Canal.' + (notificacionRef.canal ?? 'null')">{{
+              { null: '', EMAIL: 'EMAIL', SMS: 'SMS', PUSH: 'PUSH', WEBHOOK: 'WEBHOOK', LLAMADA: 'LLAMADA' }[
+                notificacionRef.canal ?? 'null'
+              ]
+            }}</span>
+          </dd>
+          <dt><span jhiTranslate="oncallApp.notificacion.destino">Destino</span></dt>
+          <dd>
+            <span>{{ notificacionRef.destino }}</span>
+          </dd>
+          <dt><span jhiTranslate="oncallApp.notificacion.estado">Estado</span></dt>
+          <dd>
+            <span [jhiTranslate]="'oncallApp.EstadoNotificacion.' + (notificacionRef.estado ?? 'null')">{{
+              {
+                null: '',
+                PENDIENTE: 'PENDIENTE',
+                ENVIADA: 'ENVIADA',
+                ENTREGADA: 'ENTREGADA',
+                FALLIDA: 'FALLIDA',
+                RECONOCIDA: 'RECONOCIDA',
+              }[notificacionRef.estado ?? 'null']
+            }}</span>
+          </dd>
+          <dt><span jhiTranslate="oncallApp.notificacion.enviadaEn">Enviada En</span></dt>
+          <dd>
+            <span>{{ notificacionRef.enviadaEn | formatMediumDatetime }}</span>
+          </dd>
+          <dt><span jhiTranslate="oncallApp.notificacion.intentos">Intentos</span></dt>
+          <dd>
+            <span>{{ notificacionRef.intentos }}</span>
+          </dd>
+          <dt><span jhiTranslate="oncallApp.notificacion.errorMensaje">Error Mensaje</span></dt>
+          <dd>
+            <span>{{ notificacionRef.errorMensaje }}</span>
+          </dd>
+          <dt><span jhiTranslate="oncallApp.notificacion.incidente">Incidente</span></dt>
+          <dd>
+            @if (notificacion()!.incidente) {
+              <div>
+                <a [routerLink]="['/incidente', notificacion()!.incidente?.id, 'view']">{{ notificacionRef.incidente?.titulo }}</a>
+              </div>
+            }
+          </dd>
+          <dt><span jhiTranslate="oncallApp.notificacion.destinatario">Destinatario</span></dt>
+          <dd>
+            <span>{{ notificacionRef.destinatario?.login }}</span>
+          </dd>
+        </dl>
+
+        <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+          <fa-icon icon="arrow-left" />&nbsp;<span jhiTranslate="entity.action.back">Volver</span>
+        </button>
+
+        <button type="button" [routerLink]="['/notificacion', notificacionRef.id, 'edit']" class="btn btn-primary">
+          <fa-icon icon="pencil-alt" />&nbsp;<span jhiTranslate="entity.action.edit">Editar</span>
+        </button>
+      </div>
+    }
+  </div>
+</div>

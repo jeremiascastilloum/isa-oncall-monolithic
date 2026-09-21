@@ -1,0 +1,10 @@
+{
+  "oncallApp": {
+    "Prioridad": {
+      "null": "",
+      "ALTA": "ALTA",
+      "MEDIA": "MEDIA",
+      "BAJA": "BAJA"
+    }
+  }
+}

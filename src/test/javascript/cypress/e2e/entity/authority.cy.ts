@@ -1,0 +1,163 @@
+import {
+  entityConfirmDeleteButtonSelector,
+  entityCreateButtonSelector,
+  entityCreateCancelButtonSelector,
+  entityCreateSaveButtonSelector,
+  entityDeleteButtonSelector,
+  entityDetailsBackButtonSelector,
+  entityDetailsButtonSelector,
+  entityTableSelector,
+} from '../../support/entity';
+
+describe('Authority e2e test', () => {
+  const authorityPageUrl = '/authority';
+  let username: string;
+  let password: string;
+  const authoritySample = { name: '1f7ce4fd-7e49-4cb2-9607-d900c1d99774' };
+
+  let authority;
+
+  before(() => {
+    cy.credentials().then(credentials => {
+      ({ adminUsername: username, adminPassword: password } = credentials);
+    });
+  });
+
+  beforeEach(() => {
+    cy.login(username, password);
+  });
+
+  beforeEach(() => {
+    cy.intercept('GET', '/api/authorities+(?*|)').as('entitiesRequest');
+    cy.intercept('POST', '/api/authorities').as('postEntityRequest');
+    cy.intercept('DELETE', '/api/authorities/*').as('deleteEntityRequest');
+  });
+
+  afterEach(() => {
+    if (authority) {
+      cy.authenticatedRequest({
+        method: 'DELETE',
+        url: `/api/authorities/${authority.name}`,
+      }).then(() => {
+        authority = undefined;
+      });
+    }
+  });
+
+  it('Authorities menu should load Authorities page', () => {
+    cy.visit('/');
+    cy.clickOnAdminMenuItem('authority');
+    cy.wait('@entitiesRequest').then(({ response }) => {
+      if (response?.body.length === 0) {
+        cy.get(entityTableSelector).should('not.exist');
+      } else {
+        cy.get(entityTableSelector).should('exist');
+      }
+    });
+    cy.getEntityHeading('Authority').should('exist');
+    cy.location('pathname').should('eq', authorityPageUrl);
+  });
+
+  describe('Authority page', () => {
+    it('should have translated page title', () => {
+      cy.visit(authorityPageUrl);
+      cy.getEntityHeading('Authority').should('not.contain', 'oncallApp.adminAuthority.home.title');
+    });
+
+    describe('create button click', () => {
+      beforeEach(() => {
+        cy.visit(authorityPageUrl);
+        cy.wait('@entitiesRequest');
+      });
+
+      it('should load create Authority page', () => {
+        cy.get(entityCreateButtonSelector).click();
+        cy.location('pathname').should('eq', `${authorityPageUrl}/new`);
+        cy.getEntityCreateUpdateHeading('Authority');
+        cy.get(entityCreateSaveButtonSelector).should('exist');
+        cy.get(entityCreateCancelButtonSelector).click();
+        cy.wait('@entitiesRequest').then(({ response }) => {
+          expect(response?.statusCode).to.equal(200);
+        });
+        cy.location('pathname').should('eq', authorityPageUrl);
+      });
+    });
+
+    describe('with existing value', () => {
+      beforeEach(() => {
+        cy.authenticatedRequest({
+          method: 'POST',
+          url: '/api/authorities',
+          body: authoritySample,
+        }).then(({ body }) => {
+          authority = body;
+
+          cy.intercept(
+            {
+              method: 'GET',
+              url: '/api/authorities+(?*|)',
+              times: 1,
+            },
+            {
+              statusCode: 200,
+              body: [authority],
+            },
+          ).as('entitiesRequestInternal');
+        });
+
+        cy.visit(authorityPageUrl);
+
+        cy.wait('@entitiesRequestInternal');
+      });
+
+      it('detail button click should load details Authority page', () => {
+        cy.get(entityDetailsButtonSelector).first().click();
+        cy.getEntityDetailsHeading('authority');
+        cy.get(entityDetailsBackButtonSelector).click();
+        cy.wait('@entitiesRequest').then(({ response }) => {
+          expect(response?.statusCode).to.equal(200);
+        });
+        cy.location('pathname').should('eq', authorityPageUrl);
+      });
+
+      it('last delete button click should delete instance of Authority', () => {
+        cy.get(entityDeleteButtonSelector).last().click();
+        cy.getEntityDeleteDialogHeading('authority').should('exist');
+        cy.get(entityConfirmDeleteButtonSelector).click();
+        cy.wait('@deleteEntityRequest').then(({ response }) => {
+          expect(response?.statusCode).to.equal(204);
+        });
+        cy.wait('@entitiesRequest').then(({ response }) => {
+          expect(response?.statusCode).to.equal(200);
+        });
+        cy.location('pathname').should('eq', authorityPageUrl);
+
+        authority = undefined;
+      });
+    });
+  });
+
+  describe('new Authority page', () => {
+    beforeEach(() => {
+      cy.visit(authorityPageUrl);
+      cy.get(entityCreateButtonSelector).click();
+      cy.getEntityCreateUpdateHeading('Authority');
+    });
+
+    it('should create an instance of Authority', () => {
+      cy.get(`[data-cy="name"]`).type('9372ad8d-01e2-4697-a7d7-6e912cb7686d');
+      cy.get(`[data-cy="name"]`).should('have.value', '9372ad8d-01e2-4697-a7d7-6e912cb7686d');
+
+      cy.get(entityCreateSaveButtonSelector).click();
+
+      cy.wait('@postEntityRequest').then(({ response }) => {
+        expect(response?.statusCode).to.equal(201);
+        authority = response.body;
+      });
+      cy.wait('@entitiesRequest').then(({ response }) => {
+        expect(response?.statusCode).to.equal(200);
+      });
+      cy.location('pathname').should('eq', authorityPageUrl);
+    });
+  });
+});
