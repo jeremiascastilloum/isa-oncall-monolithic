@@ -100,12 +100,75 @@ Recorré la aplicación. Podés dar de alta servicios, equipos, rotaciones, turn
 
 Y sin embargo la aplicación **no sirve para nada todavía**, porque falta exactamente lo que ningún generador puede adivinar:
 
-1. **Deduplicar alertas.** Llega una alerta con un `fingerprint` que ya existe en un incidente abierto: ¿se pega a ese incidente o abre uno nuevo?
+1. ~~**Deduplicar alertas.**~~ Llega una alerta con un `fingerprint` que ya existe en un incidente abierto: ¿se pega a ese incidente o abre uno nuevo? → **hecho en la clase 3**, ver abajo.
 2. **Resolver quién está de guardia ahora.** Dado un instante y una rotación, ¿qué persona es la responsable? ¿Y si hay un reemplazo cargado?
 3. **Ejecutar el escalamiento.** Nadie reconoció el incidente en 5 minutos: hay que pasar al siguiente `PasoEscalamiento` y disparar la notificación.
 4. **Calcular MTTA, MTTR y cumplimiento de SLO.** Con las marcas de tiempo del incidente y el `ObjetivoDeServicio` que aplica a su severidad.
 
 Esas cuatro reglas son el material de las clases siguientes.
+
+---
+
+## Clase 3 · La primera regla de negocio
+
+Deduplicación de alertas por `fingerprint`. El detalle completo está en
+[`docs/regla-deduplicacion.md`](./docs/regla-deduplicacion.md); acá va lo mínimo para usarla.
+
+### Qué hace
+
+Cuando entra una alerta, la aplicación busca un incidente que tenga **el mismo fingerprint**, sobre **el mismo servicio**, y que **siga abierto** (estado distinto de `RESUELTO` y `CERRADO`, dentro de la ventana de deduplicación).
+
+- Lo encuentra → la alerta se pega a ese incidente.
+- No lo encuentra → la alerta abre un incidente, con la severidad derivada de la criticidad del servicio.
+
+En los dos casos queda una entrada en la línea de tiempo del incidente.
+
+### Cómo se usa
+
+El ABM que generó JHipster no cambió: `POST /api/alertas` sigue creando una fila y nada más. La regla vive en un endpoint propio, que es al que apunta el webhook del monitoreo:
+
+```bash
+TOKEN=$(curl -s -X POST http://localhost:8080/api/authenticate \
+  -H 'Content-Type: application/json' \
+  -d '{"username":"admin","password":"admin"}' | jq -r .id_token)
+
+for i in 1 2 3; do
+  curl -s -X POST http://localhost:8080/api/alertas/ingesta \
+    -H "Authorization: Bearer $TOKEN" \
+    -H 'Content-Type: application/json' \
+    -d '{"servicioId":1,"fingerprint":"disco-lleno-db-01","origen":"PROMETHEUS","resumen":"Disco al 95% en db-01"}' \
+    | jq '{accion, incidenteId, ocurrencias}'
+done
+```
+
+Tres señales idénticas, **un solo `incidenteId`**: un `INCIDENTE_ABIERTO` y dos `ALERTA_DEDUPLICADA`.
+
+### Dónde mirar el código
+
+| Archivo                                            | Qué es                          |
+| -------------------------------------------------- | ------------------------------- |
+| `service/DeduplicacionDeAlertasService.java`       | La regla. Empezar por acá.      |
+| `repository/IncidenteDeduplicacionRepository.java` | Las dos consultas que necesita. |
+| `web/rest/IngestaDeAlertasResource.java`           | `POST /api/alertas/ingesta`.    |
+| `service/dto/AlertaEntranteDTO.java`               | La señal cruda que entra.       |
+| `service/dto/ResultadoDeduplicacionDTO.java`       | Qué decidió la regla.           |
+
+Ninguno de esos archivos lo escribe el generador, y eso es a propósito: lo que escribimos nosotros va en archivos que `jhipster jdl --force` no pisa.
+
+### Correr los tests
+
+```bash
+./mvnw test -Dtest=DeduplicacionDeAlertasServiceTest   # la decisión, con mocks. No necesita Docker.
+./mvnw verify                                          # incluye IngestaDeAlertasResourceIT. Necesita Docker.
+```
+
+### Configuración
+
+```yaml
+oncall:
+  deduplicacion:
+    ventana-minutos: 120 # pasada la ventana, la misma señal vuelve a abrir un incidente
+```
 
 ---
 
@@ -191,10 +254,12 @@ Si aparecen cientos de archivos, la aplicación generada quedó sin ignorar. El 
 ```
 isa-oncall-monolithic/
 ├── .devcontainer/
-│   └── devcontainer.json    # Java 21 + Node 22 + Docker + JHipster 9.2
+│   └── devcontainer.json         # Java 21 + Node 22 + Docker + JHipster 9.2
 ├── docs/
-│   └── modelo.md            # el modelo explicado en prosa
-├── oncall.jh                # el modelo JDL
+│   ├── modelo.md                 # el modelo explicado en prosa
+│   └── regla-deduplicacion.md    # la regla de negocio de la clase 3
+├── src/                          # la aplicación generada + las reglas de negocio
+├── oncall.jh                     # el modelo JDL
 └── README.md
 ```
 

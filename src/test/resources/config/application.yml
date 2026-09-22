@@ -94,3 +94,13 @@ management:
   health:
     mail:
       enabled: false
+
+# ===================================================================
+# Reglas de negocio de OnCall
+# ===================================================================
+oncall:
+  deduplicacion:
+    # Ventana, en minutos, dentro de la cual una alerta con el mismo fingerprint y el mismo
+    # servicio se pega al incidente ya abierto en vez de abrir uno nuevo. Fuera de la ventana
+    # se abre un incidente nuevo aunque el anterior siga sin cerrarse.
+    ventana-minutos: 120
